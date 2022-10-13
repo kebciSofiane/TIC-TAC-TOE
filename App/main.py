@@ -44,6 +44,8 @@ surface = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Tic-Tac-Toe")
 
 running = True
+clickState = False
+
 color = "red"
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
@@ -76,19 +78,15 @@ def XorO(cellY, cellX):
     else:
         surface.blit(imgO, (cellX, cellY))
         clickState = False
-
     pygame.display.update()
 
-clickState = False
 
-def start():
-    global clickState
-
+def mouseClickDetection():
     if event.type == pygame.MOUSEBUTTONDOWN:
         (x, y) = pygame.mouse.get_pos()
         if cell1_1X + cellWidth > x > cell1_1X and cell1_1Y + cellHeight > y > cell1_1Y:
             XorO(cell1_1Y, cell1_1X)
-        elif cell1_2X + cellWidth > x > cell1_2X and cell1_2Y + cellHeight > y > cell1_2Y:
+        if cell1_2X + cellWidth > x > cell1_2X and cell1_2Y + cellHeight > y > cell1_2Y:
             XorO(cell1_2Y, cell1_2X)
         if cell1_3X + cellWidth > x > cell1_3X and cell1_3Y + cellHeight > y > cell1_3Y:
             XorO(cell1_3Y, cell1_3X)
@@ -115,7 +113,7 @@ while running:
             pos = pygame.mouse.get_pos()
             if textQuitDisplay.collidepoint(pos):
                running = False
-        start()
+        mouseClickDetection()
     clock = Clock()
     clock.tick(25)
 
