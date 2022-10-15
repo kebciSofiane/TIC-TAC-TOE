@@ -44,7 +44,7 @@ surface = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Tic-Tac-Toe")
 
 running = True
-clickState = False
+clickState = "X"
 
 color = "red"
 
@@ -67,41 +67,45 @@ textQuitDisplay = surface.blit(textQuit, (654, 80))
 
 pygame.display.flip()
 
+boxUsed = ["", "", "", "", "", "", "", "", ""]
 
 
-
-def XorO(cellY, cellX):
+def XorO(cellY, cellX, i):
     global clickState
-    if not clickState:
-        surface.blit(imgX, (cellX, cellY))
-        clickState = True
-    else:
-        surface.blit(imgO, (cellX, cellY))
-        clickState = False
-    pygame.display.update()
+    if boxUsed[i] == "":
+        if clickState == "X":
+            surface.blit(imgX, (cellX, cellY))
+            clickState = "O"
+            boxUsed[i] = "X"
+        else:
+            surface.blit(imgO, (cellX, cellY))
+            clickState = "X"
+            boxUsed[i] = "O"
+
+        pygame.display.update()
 
 
 def mouseClickDetection():
     if event.type == pygame.MOUSEBUTTONDOWN:
         (x, y) = pygame.mouse.get_pos()
         if cell1_1X + cellWidth > x > cell1_1X and cell1_1Y + cellHeight > y > cell1_1Y:
-            XorO(cell1_1Y, cell1_1X)
-        if cell1_2X + cellWidth > x > cell1_2X and cell1_2Y + cellHeight > y > cell1_2Y:
-            XorO(cell1_2Y, cell1_2X)
-        if cell1_3X + cellWidth > x > cell1_3X and cell1_3Y + cellHeight > y > cell1_3Y:
-            XorO(cell1_3Y, cell1_3X)
-        if cell2_1X + cellWidth > x > cell2_1X and cell2_1Y + cellHeight > y > cell2_1Y:
-            XorO(cell2_1Y, cell2_1X)
-        if cell2_2X + cellWidth > x > cell2_2X and cell2_2Y + cellHeight > y > cell2_2Y:
-            XorO(cell2_2Y, cell2_2X)
-        if cell2_3X + cellWidth > x > cell2_3X and cell2_3Y + cellHeight > y > cell2_3Y:
-            XorO(cell2_3Y, cell2_3X)
-        if cell3_1X + cellWidth > x > cell3_1X and cell3_1Y + cellHeight > y > cell3_1Y:
-            XorO(cell3_1Y, cell3_1X)
-        if cell3_2X + cellWidth > x > cell3_2X and cell3_2Y + cellHeight > y > cell3_2Y:
-            XorO(cell3_2Y, cell3_2X)
-        if cell3_3X + cellWidth > x > cell3_3X and cell3_3Y + cellHeight > y > cell3_3Y:
-            XorO(cell3_3Y, cell3_3X)
+            XorO(cell1_1Y, cell1_1X, 0)
+        elif cell1_2X + cellWidth > x > cell1_2X and cell1_2Y + cellHeight > y > cell1_2Y:
+            XorO(cell1_2Y, cell1_2X, 1)
+        elif cell1_3X + cellWidth > x > cell1_3X and cell1_3Y + cellHeight > y > cell1_3Y:
+            XorO(cell1_3Y, cell1_3X, 2)
+        elif cell2_1X + cellWidth > x > cell2_1X and cell2_1Y + cellHeight > y > cell2_1Y:
+            XorO(cell2_1Y, cell2_1X, 3)
+        elif cell2_2X + cellWidth > x > cell2_2X and cell2_2Y + cellHeight > y > cell2_2Y:
+            XorO(cell2_2Y, cell2_2X, 4)
+        elif cell2_3X + cellWidth > x > cell2_3X and cell2_3Y + cellHeight > y > cell2_3Y:
+            XorO(cell2_3Y, cell2_3X, 5)
+        elif cell3_1X + cellWidth > x > cell3_1X and cell3_1Y + cellHeight > y > cell3_1Y:
+            XorO(cell3_1Y, cell3_1X, 6)
+        elif cell3_2X + cellWidth > x > cell3_2X and cell3_2Y + cellHeight > y > cell3_2Y:
+            XorO(cell3_2Y, cell3_2X, 7)
+        elif cell3_3X + cellWidth > x > cell3_3X and cell3_3Y + cellHeight > y > cell3_3Y:
+            XorO(cell3_3Y, cell3_3X, 8)
 
 
 while running:
@@ -112,8 +116,7 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if textQuitDisplay.collidepoint(pos):
-               running = False
+                running = False
         mouseClickDetection()
     clock = Clock()
     clock.tick(25)
-
