@@ -1,6 +1,10 @@
 import pygame
 
 from pygame.locals import *
+
+from tkinter import *
+from tkinter import messagebox
+
 from pygame.time import Clock
 
 pygame.init()
@@ -64,18 +68,25 @@ def drawXorO(row, col):
 
 
 def checkWin(row, col):
+    global running
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
-        print('It''s a win')
+        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
+            running = False
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
-        print('It''s a win')
+        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
+            running = False
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
-        print('It''s a win')
+        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
+            running = False
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
-        print('It''s a win')
+        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
+            running = False
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
-        print('It''s a win')
+        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
+            running = False
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
-        print('It''s a win')
+        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
+            running = False
 
 
 def findColAndRow(x, y):
