@@ -67,26 +67,29 @@ def drawXorO(row, col):
         pygame.display.update()
 
 
+def alertBoxWinLoose():
+    global textQuitDisplay
+    global textRestart
+    pygame.draw.rect(surface, "white",
+                     pygame.Rect((gameScreenWidth / 2, gameScreenHeight / 2 - 100, 400, 200)))
+    textRestart = surface.blit(textRestart, (gameScreenWidth / 2 + 80, gameScreenHeight / 2))
+    textQuitDisplay = surface.blit(textQuit, (gameScreenWidth / 2 + 300, gameScreenHeight / 2))
+
+
 def checkWin(row, col):
     global running
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
-        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
-            running = False
+        alertBoxWinLoose()
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
-        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
-            running = False
+        alertBoxWinLoose()
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
-        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
-            running = False
+        alertBoxWinLoose()
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
-        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
-            running = False
+        alertBoxWinLoose()
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
-        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
-            running = False
+        alertBoxWinLoose()
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
-        if not messagebox.askretrycancel('Restart', 'Do you want to start again ?'):
-            running = False
+        alertBoxWinLoose()
 
 
 def findColAndRow(x, y):
@@ -94,6 +97,7 @@ def findColAndRow(x, y):
         col = 0
     elif x < cellWidth * 2:
         col = 1
+
     else:
         col = 2
 
