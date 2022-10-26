@@ -1,10 +1,5 @@
 import pygame
-
-from pygame.locals import *
-
-from tkinter import *
-from tkinter import messagebox
-
+import time
 from pygame.time import Clock
 
 pygame.init()
@@ -52,6 +47,21 @@ pygame.display.flip()
 boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
 
 
+def gameRestart():
+    global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, boxUsed, gameNotFinished, clickState
+    pygame.display.update()
+
+    surface.fill("black")
+    rect = pygame.draw.rect(surface, "white",
+                            pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+    textStartDisplay = surface.blit(textStart, (654, 20))
+    textRestartDisplay = surface.blit(textRestart, (654, 50))
+    textQuitDisplay = surface.blit(textQuit, (654, 80))
+    boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
+    gameNotFinished = True
+    clickState = "X"
+
+
 def drawXorO(row, col):
     global clickState
     print(row, "-", col)
@@ -69,12 +79,8 @@ def drawXorO(row, col):
 
 
 def alertBoxWinLoose():
-    global textQuitDisplay, textRestart, gameNotFinished
+    global gameNotFinished
     gameNotFinished = False;
-    pygame.draw.rect(surface, "white",
-                     pygame.Rect((gameScreenWidth / 2, gameScreenHeight / 2 - 100, 400, 200)))
-    textRestart = surface.blit(textRestart, (gameScreenWidth / 2 + 80, gameScreenHeight / 2))
-    textQuitDisplay = surface.blit(textQuit, (gameScreenWidth / 2 + 300, gameScreenHeight / 2))
 
 
 def checkWin(row, col):
@@ -94,22 +100,24 @@ def checkWin(row, col):
 
 
 def findColAndRow(x, y):
+    row, col = -1, -1
     if x < cellWidth:
         col = 0
     elif x < cellWidth * 2:
         col = 1
 
-    else:
+    elif cellWidth * 2 < x < cellWidth * 3:
         col = 2
 
     if y < cellHeight:
         row = 0
     elif y < cellHeight * 2:
         row = 1
-    else:
+    elif cellHeight * 2 < y < cellHeight * 3:
         row = 2
 
-    drawXorO(row, col)
+    if row > -1 and col > -1:
+        drawXorO(row, col)
 
 
 def mouseClickDetection():
@@ -127,7 +135,7 @@ while running:
             pos = pygame.mouse.get_pos()
             if textQuitDisplay.collidepoint(pos):
                 running = False
+            if textRestartDisplay.collidepoint(pos):
+                gameRestart()
         if gameNotFinished:
             mouseClickDetection()
-    clock = Clock()
-    clock.tick(25)
