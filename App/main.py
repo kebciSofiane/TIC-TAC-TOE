@@ -25,6 +25,7 @@ surface = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Tic-Tac-Toe")
 
 running = True
+gameNotFinished = True
 clickState = "X"
 
 color = "red"
@@ -68,8 +69,8 @@ def drawXorO(row, col):
 
 
 def alertBoxWinLoose():
-    global textQuitDisplay
-    global textRestart
+    global textQuitDisplay, textRestart, gameNotFinished
+    gameNotFinished = False;
     pygame.draw.rect(surface, "white",
                      pygame.Rect((gameScreenWidth / 2, gameScreenHeight / 2 - 100, 400, 200)))
     textRestart = surface.blit(textRestart, (gameScreenWidth / 2 + 80, gameScreenHeight / 2))
@@ -126,6 +127,7 @@ while running:
             pos = pygame.mouse.get_pos()
             if textQuitDisplay.collidepoint(pos):
                 running = False
-        mouseClickDetection()
+        if gameNotFinished:
+            mouseClickDetection()
     clock = Clock()
     clock.tick(25)
