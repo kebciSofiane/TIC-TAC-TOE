@@ -39,6 +39,13 @@ imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\
 
 imgPlayerFrame = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\PlayerFrame.png")
 
+imgHorizentalLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\horizentalLine.png")
+imgVerticalLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\verticalLine.png")
+imgdiagonalLeftLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineLeft.png")
+imgdiagonalRightLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
+
+
+
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
 imgStartUnclicked = pygame.transform.scale(imgStartUnclicked, (130, 50))
@@ -54,17 +61,19 @@ imgRestartClicked = pygame.transform.scale(imgRestartClicked, (130, 50))
 imgRestartOverview = pygame.transform.scale(imgRestartOverview, (130, 50))
 
 imgPlayerFrame = pygame.transform.scale(imgPlayerFrame, (170, 50))
+imgHorizentalLine = pygame.transform.scale(imgHorizentalLine, (540, 61))
+imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
+
 
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
 text1 = font1.render('Player X', True, (255, 255, 255))
 text2 = font1.render('Player O', True, (255, 255, 255))
 
 
-
 def gameInitializing():
     global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay
     pygame.draw.rect(surface, "white",
-                            pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+                     pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
@@ -108,28 +117,35 @@ def drawXorO(row, col):
         pygame.display.update()
 
 
-def alertBoxWinLoose():
-    global gameNotFinished
-    pygame.draw.line(surface, color, (23, 45), (200, 43))
-    pygame.display.update()
-
-    gameNotFinished = False
-
 
 def checkWin(row, col):
+    global gameNotFinished
     global running
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
-        alertBoxWinLoose()
+        surface.blit(imgHorizentalLine, (20, row*cellHeight+ cellHeight/3))
+        gameNotFinished = False
+
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
-        alertBoxWinLoose()
+        surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3,10))
+        gameNotFinished = False
+
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
-        alertBoxWinLoose()
+        surface.blit(imgdiagonalLeftLine, (40,30))
+        gameNotFinished = False
+
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
-        alertBoxWinLoose()
+        surface.blit(imgdiagonalLeftLine, (40,30))
+        gameNotFinished = False
+
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
-        alertBoxWinLoose()
+        surface.blit(imgdiagonalRightLine, (40,30))
+        gameNotFinished = False
+
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
-        alertBoxWinLoose()
+        surface.blit(imgdiagonalRightLine, (40, 30))
+        gameNotFinished = False
+
+    pygame.display.update()
 
 
 def findColAndRow(x, y):
