@@ -9,7 +9,7 @@ screenHeight = 500
 gameScreenHeight = 500
 gameScreenWidth = 590
 
-cellWidth = gameScreenWidth = 590 / 3
+cellWidth = gameScreenWidth / 3
 cellHeight = gameScreenHeight / 3
 
 menuWidth = 200
@@ -37,6 +37,8 @@ imgQuitClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\q
 imgQuitOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitOverview.png")
 imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitUnclicked.png")
 
+imgPlayerFrame = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\PlayerFrame.png")
+
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
 imgStartUnclicked = pygame.transform.scale(imgStartUnclicked, (130, 50))
@@ -51,13 +53,25 @@ imgRestartUnclicked = pygame.transform.scale(imgRestartUnclicked, (130, 50))
 imgRestartClicked = pygame.transform.scale(imgRestartClicked, (130, 50))
 imgRestartOverview = pygame.transform.scale(imgRestartOverview, (130, 50))
 
+imgPlayerFrame = pygame.transform.scale(imgPlayerFrame, (170, 50))
+
+font1 = pygame.font.SysFont('freesanbold.ttf', 40)
+text1 = font1.render('Player X', True, (255, 255, 255))
+text2 = font1.render('Player O', True, (255, 255, 255))
+
+
 
 def gameInitializing():
     global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay
-    pygame.draw.rect(surface, "white", pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+    pygame.draw.rect(surface, "white",
+                            pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+    surface.blit(imgPlayerFrame, (605, 300))
+    player = text1
+    surface.blit(player, (630, 315))
+
     pygame.display.flip()
     gameNotFinished = True
     clickState = "X"
@@ -75,18 +89,22 @@ def gameRestart():
 
 
 def drawXorO(row, col):
-    global clickState
+    global clickState, player
     print(row, "-", col)
     if boxUsed[row][col] == "":
         if clickState == "X":
             surface.blit(imgX, (cellWidth * col, cellHeight * row))
             clickState = "O"
+            player = text2
             boxUsed[row][col] = "X"
         else:
             surface.blit(imgO, (cellWidth * col, cellHeight * row))
             clickState = "X"
+            player = text1
             boxUsed[row][col] = "O"
         checkWin(row, col)
+        playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
+        surface.blit(player, (630, 315))
         pygame.display.update()
 
 
@@ -95,7 +113,7 @@ def alertBoxWinLoose():
     pygame.draw.line(surface, color, (23, 45), (200, 43))
     pygame.display.update()
 
-    gameNotFinished = False;
+    gameNotFinished = False
 
 
 def checkWin(row, col):
