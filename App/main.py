@@ -68,10 +68,12 @@ imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
 text1 = font1.render('Player X', True, (255, 255, 255))
 text2 = font1.render('Player O', True, (255, 255, 255))
+text3 = font1.render('The winner is ', True, (255, 255, 255))
+
 
 
 def gameInitializing():
-    global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay
+    global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay, winner
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
@@ -84,6 +86,7 @@ def gameInitializing():
     pygame.display.flip()
     gameNotFinished = True
     clickState = "X"
+    winner =""
     boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
 
 
@@ -119,31 +122,47 @@ def drawXorO(row, col):
 
 
 def checkWin(row, col):
-    global gameNotFinished
-    global running
+    global gameNotFinished,running,winner
+
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
         surface.blit(imgHorizentalLine, (20, row*cellHeight+ cellHeight/3))
         gameNotFinished = False
+        winner = boxUsed[row][0]
 
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
         surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3,10))
         gameNotFinished = False
+        winner=boxUsed[1][col]
 
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
         surface.blit(imgdiagonalLeftLine, (40,30))
         gameNotFinished = False
+        winner="X"
 
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
         surface.blit(imgdiagonalLeftLine, (40,30))
         gameNotFinished = False
+        winner="O"
 
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
         surface.blit(imgdiagonalRightLine, (40,30))
         gameNotFinished = False
+        winner="X"
+
 
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
         surface.blit(imgdiagonalRightLine, (40, 30))
         gameNotFinished = False
+        winner="O"
+
+    if winner== "X" :
+        surface.blit(text3, (100, 470))
+        surface.blit(text1, (300, 470))
+    elif winner=="O" :
+        surface.blit(text3, (100, 470))
+        surface.blit(text2, (300, 470))
+
+
 
     pygame.display.update()
 
