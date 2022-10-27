@@ -1,4 +1,5 @@
 import pygame
+import time
 
 pygame.init()
 
@@ -23,16 +24,32 @@ color = "red"
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
+
 imgStartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startClicked.png")
 imgStartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\start_Unclicked.png")
-imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitUnclicked.png")
+imgStartOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startOverview.png")
+
+imgRestartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartClicked.png")
 imgRestartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartUnclicked.png")
+imgRestartOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartOverview.png")
+
+imgQuitClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitClicked.png")
+imgQuitOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitOverview.png")
+imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitUnclicked.png")
 
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
 imgStartUnclicked = pygame.transform.scale(imgStartUnclicked, (130, 50))
+imgStartClicked = pygame.transform.scale(imgStartClicked, (130, 50))
+imgStartOverview = pygame.transform.scale(imgStartOverview, (130, 50))
+
 imgQuitUnclicked = pygame.transform.scale(imgQuitUnclicked, (130, 50))
+imgQuitClicked = pygame.transform.scale(imgQuitClicked, (130, 50))
+imgQuitOverview = pygame.transform.scale(imgQuitOverview, (130, 50))
+
 imgRestartUnclicked = pygame.transform.scale(imgRestartUnclicked, (130, 50))
+imgRestartClicked = pygame.transform.scale(imgRestartClicked, (130, 50))
+imgRestartOverview = pygame.transform.scale(imgRestartOverview, (130, 50))
 
 
 def gameInitializing():
@@ -128,13 +145,36 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        pos = pygame.mouse.get_pos()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
             if textQuitDisplay.collidepoint(pos):
+                textQuitDisplay = surface.blit(imgQuitClicked, (625, 100))
+                pygame.display.flip()
+                time.sleep(0.1)
                 running = False
-            if textRestartDisplay.collidepoint(pos):
-
+            elif textRestartDisplay.collidepoint(pos):
+                textRestartDisplay = surface.blit(imgRestartClicked, (625, 160))
+                pygame.display.flip()
+                time.sleep(0.2)
                 gameRestart()
+            elif textStartDisplay.collidepoint(pos):
+                textStartDisplay = surface.blit(imgStartClicked, (625, 40))
+                pygame.display.flip()
+
+        elif textStartDisplay.collidepoint(pos):
+            textStartDisplay = surface.blit(imgStartOverview, (625, 40))
+        elif textRestartDisplay.collidepoint(pos):
+            textRestartDisplay = surface.blit(imgRestartOverview, (625, 160))
+        elif textQuitDisplay.collidepoint(pos):
+            textQuitDisplay = surface.blit(imgQuitOverview, (625, 100))
+
+        else:
+            textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
+            textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
+            textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+
+        pygame.display.flip()
+
         if gameNotFinished:
             mouseClickDetection()
