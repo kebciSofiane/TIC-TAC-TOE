@@ -1,6 +1,4 @@
 import pygame
-import time
-from pygame.time import Clock
 
 pygame.init()
 
@@ -20,46 +18,43 @@ surface = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Tic-Tac-Toe")
 
 running = True
-gameNotFinished = True
-clickState = "X"
 
 color = "red"
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
+imgStartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startClicked.png")
+imgStartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\start_Unclicked.png")
+imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitUnclicked.png")
+imgRestartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartUnclicked.png")
 
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
+imgStartUnclicked = pygame.transform.scale(imgStartUnclicked, (130, 50))
+imgQuitUnclicked = pygame.transform.scale(imgQuitUnclicked, (130, 50))
+imgRestartUnclicked = pygame.transform.scale(imgRestartUnclicked, (130, 50))
 
-rect = pygame.draw.rect(surface, "white", pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
-font = pygame.font.Font('freesansbold.ttf', 20)
 
-textStart = font.render('Start', True, "black", "red")
-textRestart = font.render('Restart', True, "black", "red")
-textQuit = font.render('Quit', True, "black", "red")
+def gameInitializing():
+    global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay
+    pygame.draw.rect(surface, "white", pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+    textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
+    textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
+    textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+    pygame.display.flip()
+    gameNotFinished = True
+    clickState = "X"
+    boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
 
-textStartDisplay = surface.blit(textStart, (654, 20))
-textRestartDisplay = surface.blit(textRestart, (654, 50))
-textQuitDisplay = surface.blit(textQuit, (654, 80))
 
-pygame.display.flip()
-
-boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
+gameInitializing()
 
 
 def gameRestart():
     global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, boxUsed, gameNotFinished, clickState
     pygame.display.update()
-
     surface.fill("black")
-    rect = pygame.draw.rect(surface, "white",
-                            pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
-    textStartDisplay = surface.blit(textStart, (654, 20))
-    textRestartDisplay = surface.blit(textRestart, (654, 50))
-    textQuitDisplay = surface.blit(textQuit, (654, 80))
-    boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
-    gameNotFinished = True
-    clickState = "X"
+    gameInitializing()
 
 
 def drawXorO(row, col):
@@ -80,6 +75,9 @@ def drawXorO(row, col):
 
 def alertBoxWinLoose():
     global gameNotFinished
+    pygame.draw.line(surface, color, (23, 45), (200, 43))
+    pygame.display.update()
+
     gameNotFinished = False;
 
 
@@ -136,6 +134,7 @@ while running:
             if textQuitDisplay.collidepoint(pos):
                 running = False
             if textRestartDisplay.collidepoint(pos):
+
                 gameRestart()
         if gameNotFinished:
             mouseClickDetection()
