@@ -44,6 +44,8 @@ imgVerticalLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\v
 imgdiagonalLeftLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineLeft.png")
 imgdiagonalRightLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
 
+imgWinRect= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.png")
+
 
 
 imgX = pygame.transform.scale(imgX, (150, 150))
@@ -65,10 +67,12 @@ imgHorizentalLine = pygame.transform.scale(imgHorizentalLine, (540, 61))
 imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 
 
+
+
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
-text1 = font1.render('Player X', True, (255, 255, 255))
-text2 = font1.render('Player O', True, (255, 255, 255))
-text3 = font1.render('The winner is ', True, (255, 255, 255))
+text1 = font1.render('Player X', True, (255, 0, 0))
+text2 = font1.render('Player O', True, (255, 0, 0))
+text3 = font1.render('The winner is ', True, (0, 0, 0))
 
 
 
@@ -156,11 +160,13 @@ def checkWin(row, col):
         winner="O"
 
     if winner== "X" :
-        surface.blit(text3, (100, 470))
-        surface.blit(text1, (300, 470))
+        surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
+        surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
+        surface.blit(text1, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
     elif winner=="O" :
-        surface.blit(text3, (100, 470))
-        surface.blit(text2, (300, 470))
+        surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
+        surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
+        surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
 
 
 
