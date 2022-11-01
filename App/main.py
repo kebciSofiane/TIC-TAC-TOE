@@ -1,5 +1,5 @@
 import pygame
-import time
+import time, random
 
 pygame.init()
 
@@ -66,7 +66,8 @@ imgPlayerFrame = pygame.transform.scale(imgPlayerFrame, (170, 50))
 imgHorizentalLine = pygame.transform.scale(imgHorizentalLine, (540, 61))
 imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 
-
+gameNotFinished=False;
+gameType ="twoPlayers"
 
 
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
@@ -74,9 +75,9 @@ text1 = font1.render('Player X', True, (255, 0, 0))
 text2 = font1.render('Player O', True, (255, 0, 0))
 text3 = font1.render('The winner is ', True, (0, 0, 0))
 
-
-
-def gameInitializing():
+lda = surface.blit(imgPlayerFrame, (300, 100))
+ia = surface.blit(imgPlayerFrame, (300, 300))
+def gameInitializing(gameType):
     global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay, winner
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
@@ -84,45 +85,59 @@ def gameInitializing():
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
     surface.blit(imgPlayerFrame, (605, 300))
+
     player = text1
     surface.blit(player, (630, 315))
-
     pygame.display.flip()
-    gameNotFinished = True
     clickState = "X"
     winner =""
     boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
 
 
-gameInitializing()
+gameInitializing(gameType)
 
 
-def gameRestart():
+def gameRestart(gameType):
     global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, boxUsed, gameNotFinished, clickState
     pygame.display.update()
     surface.fill("black")
-    gameInitializing()
+    gameInitializing(gameType)
 
 
 def drawXorO(row, col):
     global clickState, player
     print(row, "-", col)
-    if boxUsed[row][col] == "":
-        if clickState == "X":
-            surface.blit(imgX, (cellWidth * col, cellHeight * row))
-            clickState = "O"
-            player = text2
-            boxUsed[row][col] = "X"
-        else:
-            surface.blit(imgO, (cellWidth * col, cellHeight * row))
-            clickState = "X"
-            player = text1
-            boxUsed[row][col] = "O"
-        checkWin(row, col)
-        playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
-        surface.blit(player, (630, 315))
-        pygame.display.update()
+    if gameType == "twoPlayers":
+         if boxUsed[row][col] == "":
+            if clickState == "X":
+                surface.blit(imgX, (cellWidth * col, cellHeight * row))
+                clickState = "O"
+                player = text2
+                boxUsed[row][col] = "X"
+            elif gameType=="twoPlayers":
+                surface.blit(imgO, (cellWidth * col, cellHeight * row))
+                clickState = "X"
+                player = text1
+                boxUsed[row][col] = "O"""
+            checkWin(row, col)
+            playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
+            surface.blit(player, (630, 315))
+            pygame.display.update()
 
+    else :
+        if boxUsed[row][col] == "":
+                surface.blit(imgX, (cellWidth * col, cellHeight * row))
+                player = text2
+                boxUsed[row][col] = "X"
+                find = False
+                while find == False:
+                    i = random.randint(0, 2)
+                    j = random.randint(0, 2)
+                    if boxUsed[i][j] == "":
+                        find = True
+                surface.blit(imgO, (cellWidth * j, cellHeight * i))
+                boxUsed[i][j] = "O"
+                checkWin(i, j)
 
 
 def checkWin(row, col):
@@ -173,6 +188,9 @@ def checkWin(row, col):
     pygame.display.update()
 
 
+
+
+
 def findColAndRow(x, y):
     row, col = -1, -1
     if x < cellWidth:
@@ -216,13 +234,23 @@ while running:
                 textRestartDisplay = surface.blit(imgRestartClicked, (625, 160))
                 pygame.display.flip()
                 time.sleep(0.2)
-                gameRestart()
-            elif textStartDisplay.collidepoint(pos):
+                gameNotFinished = True
+                gameRestart(gameType)
+            elif ia.collidepoint(pos):
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
+                gameType = "twoPlayers"
+                gameRestart(gameType)
+                gameNotFinished = True
 
-        elif textStartDisplay.collidepoint(pos):
-            textStartDisplay = surface.blit(imgStartOverview, (625, 40))
+
+            """ elif textStartDisplay.collidepoint(pos):
+                textStartDisplay = surface.blit(imgStartClicked, (625, 40))
+                pygame.display.flip()
+                gameNotFinished = True"""
+
+            """ elif textStartDisplay.collidepoint(pos):
+            textStartDisplay = surface.blit(imgStartOverview, (625, 40))"""
         elif textRestartDisplay.collidepoint(pos):
             textRestartDisplay = surface.blit(imgRestartOverview, (625, 160))
         elif textQuitDisplay.collidepoint(pos):
