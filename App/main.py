@@ -92,6 +92,7 @@ def gameInitializing(gameType):
     clickState = "X"
     winner =""
     boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
+    list = "";
 
 
 gameInitializing(gameType)
@@ -124,20 +125,31 @@ def drawXorO(row, col):
             surface.blit(player, (630, 315))
             pygame.display.update()
 
-    else :
+    else:
         if boxUsed[row][col] == "":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 player = text2
                 boxUsed[row][col] = "X"
+                checkWin(row, col)
+
+                checkList=False;
+
+                for i in range(3):
+                    for j in range(3):
+                        if (len(boxUsed[i][j])==0):
+                            checkList = True;
+
+
                 find = False
-                while find == False:
-                    i = random.randint(0, 2)
-                    j = random.randint(0, 2)
-                    if boxUsed[i][j] == "":
-                        find = True
-                surface.blit(imgO, (cellWidth * j, cellHeight * i))
-                boxUsed[i][j] = "O"
-                checkWin(i, j)
+                if checkList :
+                    while find == False:
+                        i = random.randint(0, 2)
+                        j = random.randint(0, 2)
+                        if boxUsed[i][j] == "":
+                            find = True
+                        surface.blit(imgO, (cellWidth * j, cellHeight * i))
+                        boxUsed[i][j] = "O"
+                        checkWin(i, j)
 
 
 def checkWin(row, col):
@@ -239,6 +251,12 @@ while running:
             elif ia.collidepoint(pos):
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
+                gameType = "bot"
+                gameRestart(gameType)
+                gameNotFinished = True
+            elif lda.collidepoint(pos):
+                textStartDisplay = surface.blit(imgStartClicked, (625, 40))
+                pygame.display.flip()
                 gameType = "twoPlayers"
                 gameRestart(gameType)
                 gameNotFinished = True
@@ -251,8 +269,10 @@ while running:
 
             """ elif textStartDisplay.collidepoint(pos):
             textStartDisplay = surface.blit(imgStartOverview, (625, 40))"""
+
         elif textRestartDisplay.collidepoint(pos):
             textRestartDisplay = surface.blit(imgRestartOverview, (625, 160))
+
         elif textQuitDisplay.collidepoint(pos):
             textQuitDisplay = surface.blit(imgQuitOverview, (625, 100))
 
