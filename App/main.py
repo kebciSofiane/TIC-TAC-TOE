@@ -146,9 +146,11 @@ def drawXorO(row, col):
                         j = random.randint(0, 2)
                         if boxUsed[i][j] == "":
                             find = True
-                        surface.blit(imgO, (cellWidth * j, cellHeight * i))
-                        boxUsed[i][j] = "O"
-                        checkWin(i, j)
+                            print(i,"",j)
+                            surface.blit(imgO, (cellWidth * j, cellHeight * i))
+                            boxUsed[i][j] = "O"
+                            checkWin(i, j)
+
 
 
 def checkWin(row, col):
