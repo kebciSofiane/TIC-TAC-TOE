@@ -100,6 +100,8 @@ gameInitializing(gameType)
 
 def gameRestart(gameType):
     global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, boxUsed, gameNotFinished, clickState
+    ia.update(1000,1000,400,300);
+    lda.update(1000,1000,400,300);
     pygame.display.update()
     surface.fill("black")
     gameInitializing(gameType)
@@ -115,7 +117,7 @@ def drawXorO(row, col):
                 clickState = "O"
                 player = text2
                 boxUsed[row][col] = "X"
-            elif gameType=="twoPlayers":
+            else :
                 surface.blit(imgO, (cellWidth * col, cellHeight * row))
                 clickState = "X"
                 player = text1
@@ -133,16 +135,13 @@ def drawXorO(row, col):
                 checkWin(row, col)
 
                 checkList=False;
-
                 for i in range(3):
                     for j in range(3):
                         if (len(boxUsed[i][j])==0):
                             checkList = True;
-
-
                 find = False
                 if checkList :
-                    while find == False:
+                    while not find:
                         i = random.randint(0, 2)
                         j = random.randint(0, 2)
                         if boxUsed[i][j] == "":
@@ -190,12 +189,11 @@ def checkWin(row, col):
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text1, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
+
     elif winner=="O" :
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
-
-
 
     pygame.display.update()
 
