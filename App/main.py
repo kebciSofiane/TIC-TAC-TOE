@@ -1,5 +1,5 @@
 import pygame
-import time, random
+import time, random, copy
 
 pygame.init()
 
@@ -77,8 +77,48 @@ text3 = font1.render('The winner is ', True, (0, 0, 0))
 
 lda = surface.blit(imgPlayerFrame, (300, 100))
 ia = surface.blit(imgPlayerFrame, (300, 300))
+
+
+
+def bestMove():
+    (i,j) = (-1,-1);
+
+    possibleMoves=[];
+    for i in range(3):
+        for j in range(3):
+            if(board[i][j] == ""):
+                possibleMoves.append((i,j))
+
+    for let in ['O','X'] :
+        for (i,j) in possibleMoves:
+            boardCopy = copy.deepcopy(board)
+            boardCopy[i][j]= let;
+            if (checkWin(i,j,boardCopy,False) ) == let :
+                return (i,j);
+
+    cornersOpen =[];
+    for (i,j) in possibleMoves :
+        if (i,j) in [(0,0),(0,2),(2,0),(2,2)]:
+            cornersOpen.append((i,j));
+    if(len(cornersOpen)>0):
+        return random.choice(cornersOpen);
+
+
+    if (1,1) in possibleMoves :
+        return (1,1);
+
+    edgesOpen =[];
+    for (i,j) in possibleMoves :
+        if (i,j) in [(0,1),(1,0),(1,2),(2,1)]:
+            edgesOpen.append((i,j));
+    if(len(edgesOpen)>0):
+        return random.choice(edgesOpen);
+
+    return (i,j);
+
+
 def gameInitializing(gameType):
-    global textStartDisplay, clickState, boxUsed, gameNotFinished, textRestartDisplay, textQuitDisplay, winner
+    global textStartDisplay, clickState, board, gameNotFinished, textRestartDisplay, textQuitDisplay, winner
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
@@ -91,7 +131,9 @@ def gameInitializing(gameType):
     pygame.display.flip()
     clickState = "X"
     winner =""
-    boxUsed = [["", "", ""], ["", "", ""], ["", "", ""]]
+    board = [["", "", ""],
+             ["", "", ""],
+             ["", "", ""]]
     list = "";
 
 
@@ -99,7 +141,7 @@ gameInitializing(gameType)
 
 
 def gameRestart(gameType):
-    global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, boxUsed, gameNotFinished, clickState
+    global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, board, gameNotFinished, clickState
     ia.update(1000,1000,400,300);
     lda.update(1000,1000,400,300);
     pygame.display.update()
@@ -111,96 +153,91 @@ def drawXorO(row, col):
     global clickState, player
     print(row, "-", col)
     if gameType == "twoPlayers":
-         if boxUsed[row][col] == "":
+         if board[row][col] == "":
             if clickState == "X":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 clickState = "O"
                 player = text2
-                boxUsed[row][col] = "X"
+                board[row][col] = "X"
             else :
                 surface.blit(imgO, (cellWidth * col, cellHeight * row))
                 clickState = "X"
                 player = text1
-                boxUsed[row][col] = "O"""
-            checkWin(row, col)
+                board[row][col] = "O"""
+            displayWinner(checkWin(row, col, board,True));
             playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
             surface.blit(player, (630, 315))
             pygame.display.update()
 
     else:
-        if boxUsed[row][col] == "":
+        if board[row][col] == "":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 player = text2
-                boxUsed[row][col] = "X"
-                checkWin(row, col)
+                board[row][col] = "X"
+                displayWinner(checkWin(row, col, board,True));
 
-                checkList=False;
-                for i in range(3):
-                    for j in range(3):
-                        if (len(boxUsed[i][j])==0):
-                            checkList = True;
-                find = False
-                if checkList :
-                    while not find:
-                        i = random.randint(0, 2)
-                        j = random.randint(0, 2)
-                        if boxUsed[i][j] == "":
-                            find = True
-                            print(i,"",j)
-                            surface.blit(imgO, (cellWidth * j, cellHeight * i))
-                            boxUsed[i][j] = "O"
-                            checkWin(i, j)
+                (i,j) = bestMove();
+                if (i,j) != (-1,-1) :
+                    print(i,"",j)
+                    surface.blit(imgO, (cellWidth * j, cellHeight * i))
+                    board[i][j] = "O"
+                    displayWinner(checkWin(i, j, board,True));
+                else:
+                    gameNotFinished = False;
 
 
-
-def checkWin(row, col):
-    global gameNotFinished,running,winner
-
-    if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
-        surface.blit(imgHorizentalLine, (20, row*cellHeight+ cellHeight/3))
-        gameNotFinished = False
-        winner = boxUsed[row][0]
-
-    elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
-        surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3,10))
-        gameNotFinished = False
-        winner=boxUsed[1][col]
-
-    elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
-        surface.blit(imgdiagonalLeftLine, (40,30))
-        gameNotFinished = False
-        winner="X"
-
-    elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
-        surface.blit(imgdiagonalLeftLine, (40,30))
-        gameNotFinished = False
-        winner="O"
-
-    elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
-        surface.blit(imgdiagonalRightLine, (40,30))
-        gameNotFinished = False
-        winner="X"
-
-
-    elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
-        surface.blit(imgdiagonalRightLine, (40, 30))
-        gameNotFinished = False
-        winner="O"
-
+def displayWinner(winner):
+    global gameNotFinished;
     if winner== "X" :
+        gameNotFinished = False
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text1, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
 
     elif winner=="O" :
+        gameNotFinished = False
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
 
     pygame.display.update()
+def checkWin(row, col,boxUsed, drawLine):
+    global winner
 
+    if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
+        if drawLine:
+         surface.blit(imgHorizentalLine, (20, row*cellHeight+ cellHeight/3))
+        winner = boxUsed[row][0]
 
+    elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
+        if drawLine:
+         surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3,10))
+        winner=boxUsed[1][col]
 
+    elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
+        if drawLine:
+         surface.blit(imgdiagonalLeftLine, (40,30))
+        winner="X"
+
+    elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
+        if drawLine:
+         surface.blit(imgdiagonalLeftLine, (40,30))
+        winner="O"
+
+    elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
+        if drawLine:
+         surface.blit(imgdiagonalRightLine, (40,30))
+        winner="X"
+
+    elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
+        if drawLine:
+         surface.blit(imgdiagonalRightLine, (40, 30))
+        winner="O"
+
+    else :
+        winner = " ";
+
+    return  winner;
 
 
 def findColAndRow(x, y):
@@ -261,14 +298,6 @@ while running:
                 gameRestart(gameType)
                 gameNotFinished = True
 
-
-            """ elif textStartDisplay.collidepoint(pos):
-                textStartDisplay = surface.blit(imgStartClicked, (625, 40))
-                pygame.display.flip()
-                gameNotFinished = True"""
-
-            """ elif textStartDisplay.collidepoint(pos):
-            textStartDisplay = surface.blit(imgStartOverview, (625, 40))"""
 
         elif textRestartDisplay.collidepoint(pos):
             textRestartDisplay = surface.blit(imgRestartOverview, (625, 160))
