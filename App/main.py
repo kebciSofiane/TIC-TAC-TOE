@@ -71,12 +71,21 @@ gameType ="twoPlayers"
 
 
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
+font2 = pygame.font.SysFont('freesanbold.ttf', 30)
+
 text1 = font1.render('Player X', True, (255, 0, 0))
 text2 = font1.render('Player O', True, (255, 0, 0))
 text3 = font1.render('The winner is ', True, (0, 0, 0))
+text4 = font1.render('Player 2', True, (0, 0, 0))
+text5 = font1.render('Bot', True, (0, 0, 0))
 
-lda = surface.blit(imgPlayerFrame, (300, 100))
-ia = surface.blit(imgPlayerFrame, (300, 300))
+
+
+lda = surface.blit(imgPlayerFrame, (gameScreenWidth/2-85, 100))
+ldaText = surface.blit(text4, (gameScreenWidth/2-55, 115))
+
+ia = surface.blit(imgPlayerFrame, (gameScreenWidth/2-85, 300))
+iaText = surface.blit(text5, (gameScreenWidth/2-25, 315))
 
 
 
