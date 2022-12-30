@@ -80,12 +80,59 @@ text2 = font1.render('Player O', True, (255, 0, 0))
 text3 = font1.render('The winner is ', True, (0, 0, 0))
 text4 = font1.render('Player 2', True, (0, 0, 0))
 text5 = font1.render('Bot', True, (0, 0, 0))
+firstClick = True
 
-Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth / 2 - 85, 100))
-Player2Text = surface.blit(text4, (gameScreenWidth / 2 - 55, 115))
+def gameMode():
+    global  bot, Player2,textQuitDisplay, surface,textStartDisplay,textRestartDisplay,gameNotFinished
+    gameNotFinished = False;
 
-bot = surface.blit(imgPlayerFrame, (gameScreenWidth / 2 - 85, 300))
-botText = surface.blit(text5, (gameScreenWidth / 2 - 25, 315))
+    surface.fill("black")
+    firstClick = False
+    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth / 2 - 85, 100))
+    Player2Text = surface.blit(text4, (gameScreenWidth / 2 - 55, 115))
+    bot = surface.blit(imgPlayerFrame, (gameScreenWidth / 2 - 85, 300))
+    botText = surface.blit(text5, (gameScreenWidth / 2 - 25, 315))
+
+    pygame.draw.rect(surface, "white",
+                     pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+    textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
+    textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
+    textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+    print("ggg",firstClick)
+def gameInitializing(gameType):
+    print("------")
+    global  clickState, board, gameNotFinished, winner,surface
+    Player2.update(1000,1000,1,1)
+    bot.update(1000,1000,1,1)
+
+    surface.fill("black")
+    pygame.draw.rect(surface, "white",
+                     pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+    surface.blit(imgPlayerFrame, (605, 300))
+
+    player = text1
+    surface.blit(player, (630, 315))
+    pygame.display.flip()
+    clickState = "X"
+    winner =""
+    board = [["", "", ""],
+             ["", "", ""],
+             ["", "", ""]]
+    list = "";
+
+gameMode()
+
+
+def gameRestart(gameType):
+    global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, board, gameNotFinished, clickState
+
+    bot.update(1000, 1000, 400, 300);
+    Player2.update(1000, 1000, 400, 300);
+    pygame.display.update()
+    surface.fill("black")
+    gameInitializing(gameType)
+
+
 
 
 
@@ -99,7 +146,6 @@ def bestMove():
                 possibleMoves.append((i,j))
 
     if len(possibleMoves) == 0 :
-        print("gffrg")
         return  (-1,-1)
 
     for let in ['O','X'] :
@@ -128,41 +174,6 @@ def bestMove():
         return random.choice(edgesOpen);
 
     return (i,j);
-
-
-def gameInitializing(gameType):
-    print("------")
-    global textStartDisplay, clickState, board, gameNotFinished, textRestartDisplay, textQuitDisplay, winner
-    pygame.draw.rect(surface, "white",
-                     pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
-    textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
-    textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
-    textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
-    surface.blit(imgPlayerFrame, (605, 300))
-
-    player = text1
-    surface.blit(player, (630, 315))
-    pygame.display.flip()
-    clickState = "X"
-    winner =""
-    board = [["", "", ""],
-             ["", "", ""],
-             ["", "", ""]]
-    list = "";
-
-
-gameInitializing(gameType)
-
-
-def gameRestart(gameType):
-    global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, board, gameNotFinished, clickState
-    bot.update(1000, 1000, 400, 300);
-    Player2.update(1000, 1000, 400, 300);
-    pygame.display.update()
-    surface.fill("black")
-    gameInitializing(gameType)
-
-
 def drawXorO(row, col):
     global clickState, player
     if gameType == "twoPlayers":
@@ -283,7 +294,9 @@ def findColAndRow(x, y):
 
 
 def mouseClickDetection():
+    global firstClick
     if event.type == pygame.MOUSEBUTTONDOWN:
+        print(firstClick)
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
@@ -310,22 +323,22 @@ while running:
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "bot"
-                gameRestart(gameType)
+                gameInitializing(gameType)
                 gameNotFinished = True
             elif Player2.collidepoint(pos):
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "twoPlayers"
-                gameRestart(gameType)
+                gameInitializing(gameType)
                 gameNotFinished = True
-
+            elif textStartDisplay.collidepoint(pos):
+                gameMode()
 
         elif textRestartDisplay.collidepoint(pos):
             textRestartDisplay = surface.blit(imgRestartOverview, (625, 160))
 
         elif textQuitDisplay.collidepoint(pos):
             textQuitDisplay = surface.blit(imgQuitOverview, (625, 100))
-
         else:
             textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
             textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
