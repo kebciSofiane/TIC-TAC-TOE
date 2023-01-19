@@ -78,9 +78,16 @@ font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 text1 = font1.render('Player X', True, (255, 0, 0))
 text2 = font1.render('Player O', True, (255, 0, 0))
 text3 = font1.render('The winner is ', True, (0, 0, 0))
-text4 = font1.render('Player 2', True, (0, 0, 0))
+text4 = font1.render('2 Players', True, (0, 0, 0))
 text5 = font1.render('Bot', True, (0, 0, 0))
 firstClick = True
+
+
+#todo
+#count the wins
+#Ajouter un ecran titre
+#Le boutton Play ne brille pas
+#Ajouter the tied game
 
 def gameMode():
     global  bot, Player2,textQuitDisplay, surface,textStartDisplay,textRestartDisplay,gameNotFinished
@@ -89,17 +96,18 @@ def gameMode():
     surface.fill("black")
     firstClick = False
 
-
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
     print("ggg",firstClick)
-    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth+15 , 250))
-    Player2Text = surface.blit(text4, (gameScreenWidth+45, 265))
-    bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 300))
-    botText = surface.blit(text5, (gameScreenWidth+70, 315))
+    #TODO
+    #Réorganiser tout ça sans les chiffres
+    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth+15 , 300))
+    Player2Text = surface.blit(text4, (gameScreenWidth+40, 315))
+    bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 350))
+    botText = surface.blit(text5, (gameScreenWidth+70, 365))
 def gameInitializing(gameType):
     print("------")
     global  clickState, board, gameNotFinished, winner,surface
