@@ -88,10 +88,7 @@ def gameMode():
 
     surface.fill("black")
     firstClick = False
-    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth / 2 - 85, 100))
-    Player2Text = surface.blit(text4, (gameScreenWidth / 2 - 55, 115))
-    bot = surface.blit(imgPlayerFrame, (gameScreenWidth / 2 - 85, 300))
-    botText = surface.blit(text5, (gameScreenWidth / 2 - 25, 315))
+
 
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
@@ -99,6 +96,10 @@ def gameMode():
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
     print("ggg",firstClick)
+    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth+15 , 250))
+    Player2Text = surface.blit(text4, (gameScreenWidth+45, 265))
+    bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 300))
+    botText = surface.blit(text5, (gameScreenWidth+70, 315))
 def gameInitializing(gameType):
     print("------")
     global  clickState, board, gameNotFinished, winner,surface
