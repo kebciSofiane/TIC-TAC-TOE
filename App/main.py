@@ -24,6 +24,10 @@ color = "red"
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
+imgTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\Title.png")
+imgSubTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\SubTitle.png")
+
+
 
 imgStartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startClicked.png")
 imgStartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\start_Unclicked.png")
@@ -50,6 +54,8 @@ imgWinRect= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.p
 
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
+imgTitle = pygame.transform.scale(imgTitle,(300,200))
+imgSubTitle = pygame.transform.scale(imgSubTitle,(550,30))
 
 imgStartUnclicked = pygame.transform.scale(imgStartUnclicked, (130, 50))
 imgStartClicked = pygame.transform.scale(imgStartClicked, (130, 50))
@@ -88,6 +94,7 @@ firstClick = True
 #Ajouter un ecran titre
 #Le boutton Play ne brille pas
 #Ajouter the tied game
+#Ajout du nom des joueur
 
 def gameMode():
     global  bot, Player2,textQuitDisplay, surface,textStartDisplay,textRestartDisplay,gameNotFinished
@@ -99,6 +106,10 @@ def gameMode():
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
+    titleDisplay = surface.blit(imgTitle, (gameScreenWidth/2-imgTitle.get_width()/2, 100))
+    subTitleDisplay = surface.blit(imgSubTitle, (gameScreenWidth/2-imgSubTitle.get_width()/2,  350))
+
+
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
     print("ggg",firstClick)
