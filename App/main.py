@@ -86,12 +86,13 @@ text2 = font1.render('Player O', True, (255, 0, 0))
 text3 = font1.render('The winner is ', True, (0, 0, 0))
 text4 = font1.render('2 Players', True, (0, 0, 0))
 text5 = font1.render('Bot', True, (0, 0, 0))
+text6 = font1.render("It's a draw", True, (0, 0, 0))
+
 firstClick = True
 
 
 #todo
 #count the wins
-#Ajouter un ecran titre
 #Le boutton Play ne brille pas
 #Ajouter the tied game
 #Ajout du nom des joueur
@@ -222,7 +223,7 @@ def drawXorO(row, col):
                 displayWinner(checkWin(row, col, board,True));
 
                 (i,j) = bestMove();
-                if (i,j) != (-1,-1) and checkBoardFull() :
+                if (i,j) != (-1,-1) and not checkBoardFull() :
                     print(i,"",j)
                     surface.blit(imgO, (cellWidth * j, cellHeight * i))
                     board[i][j] = "O"
@@ -234,9 +235,11 @@ def drawXorO(row, col):
 
 def checkBoardFull():
     full = True
-    for cell in board :
-        if cell == "" :
-            full = False
+    for raw in board :
+        for col in raw :
+             if col == "" :
+                  full = False
+    print(full)
     return  full
 def displayWinner(winner):
     global gameNotFinished;
@@ -251,6 +254,13 @@ def displayWinner(winner):
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
+
+
+    elif checkBoardFull() :
+        surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
+        surface.blit(text6, (gameScreenWidth / 2 - imgWinRect.get_width()/2+text6
+                             .get_width()/3, gameScreenHeight / 2 -imgWinRect.get_height()/2 +text6.get_height()/2))
+
 
     pygame.display.update()
 def checkWin(row, col,boxUsed, drawLine):
