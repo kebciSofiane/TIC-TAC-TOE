@@ -80,15 +80,42 @@ gameNotFinished=False;
 gameType ="twoPlayers"
 
 
+
+def translation(toBeTranslated, gameLanguage) :
+    if gameLanguage =="fr" :
+        return toBeTranslated
+
+    conn = http.client.HTTPSConnection("microsoft-translator-text.p.rapidapi.com")
+
+    payload = "[\r\n    {\r\n        \"Text\": \""+toBeTranslated+"\"\r\n    }\r\n]"
+
+    headers = {
+        'content-type': "application/json",
+        'X-RapidAPI-Key': "6abcd70b6emshc428c20a28bad0dp1e7404jsn07b33286d64c",
+        'X-RapidAPI-Host': "microsoft-translator-text.p.rapidapi.com"
+    }
+
+    conn.request("POST", "/translate?to%5B0%5D="+gameLanguage+"&api-version=3.0&from=fr&profanityAction=NoAction&textType=plain",
+                 payload, headers)
+
+    res = conn.getresponse()
+    json_obj = json.load(res)
+
+    theTranslation = json_obj[0].get('translations')[0].get('text');
+    return theTranslation
+
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
 font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 
-text1 = font1.render('Player X', True, (255, 0, 0))
-text2 = font1.render('Player O', True, (255, 0, 0))
-text3 = font1.render('The winner is ', True, (0, 0, 0))
-text4 = font1.render('2 Players', True, (0, 0, 0))
-text5 = font1.render('Bot', True, (0, 0, 0))
-text6 = font1.render("It's a draw", True, (0, 0, 0))
+gameLanguage = 'en';
+
+
+text1 = font1.render(translation("Joueur X",gameLanguage), True, (255, 0, 0))
+text2 = font1.render(translation("Joueur O",gameLanguage), True, (255, 0, 0))
+text3 = font1.render(translation("Le gagnant est ",gameLanguage), True, (0, 0, 0))
+text4 = font1.render(translation("2 Joueurs",gameLanguage), True, (0, 0, 0))
+text5 = font1.render(translation("Robot",gameLanguage), True, (0, 0, 0))
+text6 = font1.render(translation("c'est un match nul",gameLanguage), True, (0, 0, 0))
 
 firstClick = True
 
@@ -331,33 +358,9 @@ def mouseClickDetection():
         print(firstClick)
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
-def translation() :
-    import http.client
-
-    import http.client
-
-    conn = http.client.HTTPSConnection("microsoft-translator-text.p.rapidapi.com")
-
-    payload = "[\r\n    {\r\n        \"Text\": \"c'est un match nul\"\r\n    }\r\n]"
-
-    headers = {
-        'content-type': "application/json",
-        'X-RapidAPI-Key': "6abcd70b6emshc428c20a28bad0dp1e7404jsn07b33286d64c",
-        'X-RapidAPI-Host': "microsoft-translator-text.p.rapidapi.com"
-    }
-
-    conn.request("POST", "/translate?to%5B0%5D=en&api-version=3.0&from=fr&profanityAction=NoAction&textType=plain",
-                 payload, headers)
-
-    res = conn.getresponse()
-    json_obj = json.load(res)
-
-    theTranslation = json_obj[0].get('translations')[0].get('text');
-    print(theTranslation)
-    return
 
 
-translation()
+
 
 while running:
     for event in pygame.event.get():
