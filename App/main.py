@@ -24,6 +24,8 @@ running = True
 
 color = "red"
 
+playerNameLength = 10
+
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
 imgTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\Title.png")
@@ -51,6 +53,7 @@ imgdiagonalLeftLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Image
 imgdiagonalRightLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
 
 imgWinRect= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.png")
+imgInputBox = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\inputBox.png")
 
 
 
@@ -75,6 +78,19 @@ imgPlayerFrame = pygame.transform.scale(imgPlayerFrame, (170, 50))
 imgHorizentalLine = pygame.transform.scale(imgHorizentalLine, (540, 61))
 imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 
+imgInputBox = pygame.transform.scale(imgInputBox, (300, 120))
+
+
+
+
+color_passive = pygame.Color('white')
+color_active = pygame.Color('red')
+base_font = pygame.font.Font(None, 32)
+color = color_passive
+user_text = ''
+active = False;
+
+input_rect = surface.blit(imgInputBox, (0, 0))
 
 gameNotFinished=False;
 gameType ="twoPlayers"
@@ -107,7 +123,7 @@ def translation(toBeTranslated, gameLanguage) :
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
 font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 
-gameLanguage = 'en';
+gameLanguage = 'fr';
 
 
 text1 = font1.render(translation("Joueur X",gameLanguage), True, (255, 0, 0))
@@ -123,7 +139,6 @@ firstClick = True
 #todo
 #count the wins
 #Le boutton Play ne brille pas
-#Ajouter the tied game
 #Ajout du nom des joueur
 
 def gameMode():
@@ -359,14 +374,62 @@ def mouseClickDetection():
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
+def input_box() :
+    global  user_text
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if input_rect.collidepoint(event.pos):
+            active = True
+        else:
+            active = False
 
+    if event.type == pygame.KEYDOWN:
+
+        # Check for backspace
+        if event.key == pygame.K_BACKSPACE:
+
+            # get text input from 0 to -1 i.e. end.
+            user_text = user_text[:-1]
+
+        # Unicode standard is used for string
+        # formation
+        else:
+            if len(user_text) < playerNameLength:
+                user_text += event.unicode
+        if event.key == pygame.K_RETURN:
+            print(user_text);
+
+def input_name() :
+
+
+
+    # render at position stated in arguments
+    if len(user_text) <= playerNameLength :
+        surface.fill("black")
+
+        surface.blit(imgInputBox, (100, 0))
+        text_surface = base_font.render(user_text, True, (255, 255, 255))
+        surface.blit(text_surface, (input_rect.x , input_rect.y))
+
+    # set width of textfield so that text cannot get
+    # outside of user's text input
+
+def chooseName():
+    global  nameChosen, input_rect
+
+    surface.fill("black")
+    nameChosen = False
+    input_box()
 
 
 while running:
+    input_name()
+
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
         pos = pygame.mouse.get_pos()
+        input_box()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if textQuitDisplay.collidepoint(pos):
@@ -384,6 +447,8 @@ while running:
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "bot"
+                #chooseName()
+                #if nameChosen :
                 gameInitializing(gameType)
                 gameNotFinished = True
             elif Player2.collidepoint(pos):
