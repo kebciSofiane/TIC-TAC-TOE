@@ -5,6 +5,7 @@ import time, random, copy
 
 pygame.init()
 
+
 screenWidth = 800
 screenHeight = 500
 
@@ -24,7 +25,7 @@ running = True
 
 color = "red"
 
-playerNameLength = 10
+playerNameLength = 9
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
@@ -78,7 +79,7 @@ imgPlayerFrame = pygame.transform.scale(imgPlayerFrame, (170, 50))
 imgHorizentalLine = pygame.transform.scale(imgHorizentalLine, (540, 61))
 imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 
-imgInputBox = pygame.transform.scale(imgInputBox, (300, 120))
+imgInputBox = pygame.transform.scale(imgInputBox, (170, 50))
 
 
 
@@ -126,7 +127,6 @@ font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 gameLanguage = 'fr';
 
 
-text2 = font1.render(translation("Joueur O",gameLanguage), True, (255, 0, 0))
 text3 = font1.render(translation("Le gagnant est ",gameLanguage), True, (0, 0, 0))
 text4 = font1.render(translation("2 Joueurs",gameLanguage), True, (0, 0, 0))
 text5 = font1.render(translation("Robot",gameLanguage), True, (0, 0, 0))
@@ -169,9 +169,9 @@ def input_box() :
 def input_name():
     if len(user_text) <= playerNameLength :
         gameMode()
-        surface.blit(imgInputBox, (100, 0))
+        surface.blit(imgInputBox, (gameScreenWidth/2-imgInputBox.get_width()/2, gameScreenHeight-100))
         text_surface = base_font.render(user_text, True, (255, 255, 255))
-        surface.blit(text_surface, (input_rect.x , input_rect.y))
+        surface.blit(text_surface, (gameScreenWidth/2-imgInputBox.get_width()/2+20, gameScreenHeight-100+15))
 
 def gameMode():
 
@@ -190,7 +190,6 @@ def gameMode():
 
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
-    print("ggg",firstClick)
     #TODO
     #Réorganiser tout ça sans les chiffres
     Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth+15 , 300))
@@ -198,8 +197,7 @@ def gameMode():
     bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 350))
     botText = surface.blit(text5, (gameScreenWidth+70, 365))
 def gameInitializing(gameType):
-    print("------")
-    global  clickState, board, gameNotFinished, winner,surface
+    global  clickState, board, gameNotFinished, winner,surface,text1,text2
     Player2.update(1000,1000,1,1)
     bot.update(1000,1000,1,1)
 
@@ -208,6 +206,8 @@ def gameInitializing(gameType):
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     surface.blit(imgPlayerFrame, (605, 300))
     text1 = font1.render(translation(user_text, gameLanguage), True, (255, 0, 0))
+    text2 = font1.render(translation("Joueur O", gameLanguage), True, (255, 0, 0))
+
     player = text1
     surface.blit(player, (630, 315))
     pygame.display.flip()
@@ -279,12 +279,12 @@ def drawXorO(row, col):
             if clickState == "X":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 clickState = "O"
-                player = text2
+                player = text1
                 board[row][col] = "X"
             else :
                 surface.blit(imgO, (cellWidth * col, cellHeight * row))
                 clickState = "X"
-                player = text1
+                player = text2
                 board[row][col] = "O"""
             displayWinner(checkWin(row, col, board,True));
             playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
@@ -295,13 +295,11 @@ def drawXorO(row, col):
         if board[row][col] == "":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 player = text2
-                print(row, "", col)
                 board[row][col] = "X"
                 displayWinner(checkWin(row, col, board,True));
 
                 (i,j) = bestMove();
                 if (i,j) != (-1,-1) and not checkBoardFull() :
-                    print(i,"",j)
                     surface.blit(imgO, (cellWidth * j, cellHeight * i))
                     board[i][j] = "O"
                     displayWinner(checkWin(i, j, board,True));
@@ -316,7 +314,6 @@ def checkBoardFull():
         for col in raw :
              if col == "" :
                   full = False
-    print(full)
     return  full
 def displayWinner(winner):
     global gameNotFinished;
@@ -403,7 +400,6 @@ def findColAndRow(x, y):
 def mouseClickDetection():
     global firstClick
     if event.type == pygame.MOUSEBUTTONDOWN:
-        print(firstClick)
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
@@ -439,12 +435,12 @@ while running:
                 chooseName =True
                 gameInitializing(gameType)
                 gameNotFinished = True
-                nameChosen = False
 
             elif Player2.collidepoint(pos):
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "twoPlayers"
+                chooseName =True
                 gameInitializing(gameType)
                 gameNotFinished = True
             elif textStartDisplay.collidepoint(pos):
