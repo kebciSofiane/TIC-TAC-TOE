@@ -126,7 +126,6 @@ font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 gameLanguage = 'fr';
 
 
-text1 = font1.render(translation("Joueur X",gameLanguage), True, (255, 0, 0))
 text2 = font1.render(translation("Joueur O",gameLanguage), True, (255, 0, 0))
 text3 = font1.render(translation("Le gagnant est ",gameLanguage), True, (0, 0, 0))
 text4 = font1.render(translation("2 Joueurs",gameLanguage), True, (0, 0, 0))
@@ -141,7 +140,41 @@ firstClick = True
 #Le boutton Play ne brille pas
 #Ajout du nom des joueur
 
+chooseName = False
+def input_box() :
+    global  user_text
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if input_rect.collidepoint(event.pos):
+            active = True
+        else:
+            active = False
+
+    if event.type == pygame.KEYDOWN:
+
+        # Check for backspace
+        if event.key == pygame.K_BACKSPACE:
+
+            # get text input from 0 to -1 i.e. end.
+            user_text = user_text[:-1]
+
+        # Unicode standard is used for string
+        # formation
+        else:
+            if len(user_text) < playerNameLength:
+                user_text += event.unicode
+        if event.key == pygame.K_RETURN:
+            print(user_text);
+
+
+def input_name():
+    if len(user_text) <= playerNameLength :
+        gameMode()
+        surface.blit(imgInputBox, (100, 0))
+        text_surface = base_font.render(user_text, True, (255, 255, 255))
+        surface.blit(text_surface, (input_rect.x , input_rect.y))
+
 def gameMode():
+
     global  bot, Player2,textQuitDisplay, surface,textStartDisplay,textRestartDisplay,gameNotFinished
     gameNotFinished = False;
 
@@ -174,7 +207,7 @@ def gameInitializing(gameType):
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     surface.blit(imgPlayerFrame, (605, 300))
-
+    text1 = font1.render(translation(user_text, gameLanguage), True, (255, 0, 0))
     player = text1
     surface.blit(player, (630, 315))
     pygame.display.flip()
@@ -374,62 +407,18 @@ def mouseClickDetection():
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
-def input_box() :
-    global  user_text
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        if input_rect.collidepoint(event.pos):
-            active = True
-        else:
-            active = False
-
-    if event.type == pygame.KEYDOWN:
-
-        # Check for backspace
-        if event.key == pygame.K_BACKSPACE:
-
-            # get text input from 0 to -1 i.e. end.
-            user_text = user_text[:-1]
-
-        # Unicode standard is used for string
-        # formation
-        else:
-            if len(user_text) < playerNameLength:
-                user_text += event.unicode
-        if event.key == pygame.K_RETURN:
-            print(user_text);
-
-def input_name() :
-
-
-
-    # render at position stated in arguments
-    if len(user_text) <= playerNameLength :
-        surface.fill("black")
-
-        surface.blit(imgInputBox, (100, 0))
-        text_surface = base_font.render(user_text, True, (255, 255, 255))
-        surface.blit(text_surface, (input_rect.x , input_rect.y))
-
-    # set width of textfield so that text cannot get
-    # outside of user's text input
-
-def chooseName():
-    global  nameChosen, input_rect
-
-    surface.fill("black")
-    nameChosen = False
-    input_box()
-
 
 while running:
-    input_name()
+    if not (chooseName):
+      input_name()
 
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
             running = False
         pos = pygame.mouse.get_pos()
-        input_box()
+        if not (chooseName) :
+          input_box()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if textQuitDisplay.collidepoint(pos):
@@ -447,10 +436,11 @@ while running:
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "bot"
-                #chooseName()
-                #if nameChosen :
+                chooseName =True
                 gameInitializing(gameType)
                 gameNotFinished = True
+                nameChosen = False
+
             elif Player2.collidepoint(pos):
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
