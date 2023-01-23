@@ -91,7 +91,6 @@ color = color_passive
 user_text = ''
 active = False;
 
-input_rect = surface.blit(imgInputBox, (0, 0))
 
 gameNotFinished=False;
 gameType ="twoPlayers"
@@ -143,22 +142,10 @@ firstClick = True
 chooseName = False
 def input_box() :
     global  user_text
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        if input_rect.collidepoint(event.pos):
-            active = True
-        else:
-            active = False
 
     if event.type == pygame.KEYDOWN:
-
-        # Check for backspace
         if event.key == pygame.K_BACKSPACE:
-
-            # get text input from 0 to -1 i.e. end.
             user_text = user_text[:-1]
-
-        # Unicode standard is used for string
-        # formation
         else:
             if len(user_text) < playerNameLength:
                 user_text += event.unicode
@@ -167,9 +154,10 @@ def input_box() :
 
 
 def input_name():
+    global inputBox
     if len(user_text) <= playerNameLength :
         gameMode()
-        surface.blit(imgInputBox, (gameScreenWidth/2-imgInputBox.get_width()/2, gameScreenHeight-100))
+        inputBox = surface.blit(imgInputBox, (gameScreenWidth/2-imgInputBox.get_width()/2, gameScreenHeight-100))
         text_surface = base_font.render(user_text, True, (255, 255, 255))
         surface.blit(text_surface, (gameScreenWidth/2-imgInputBox.get_width()/2+20, gameScreenHeight-100+15))
 
@@ -403,18 +391,23 @@ def mouseClickDetection():
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
-
+NameButtonClicked = False
 while running:
     if not (chooseName):
       input_name()
 
+
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if inputBox.collidepoint(pos):
+                NameButtonClicked = True
 
         if event.type == pygame.QUIT:
             running = False
         pos = pygame.mouse.get_pos()
-        if not (chooseName) :
-          input_box()
+
+        if not (chooseName) and NameButtonClicked :
+         input_box()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if textQuitDisplay.collidepoint(pos):
