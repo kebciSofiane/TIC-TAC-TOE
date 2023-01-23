@@ -25,7 +25,6 @@ running = True
 
 color = "red"
 
-playerNameLength = 9
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
@@ -81,20 +80,18 @@ imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 
 imgInputBox = pygame.transform.scale(imgInputBox, (170, 50))
 
+imgInputBox2 = imgInputBox.copy()
 
-
-
-color_passive = pygame.Color('white')
-color_active = pygame.Color('red')
 base_font = pygame.font.Font(None, 32)
-color = color_passive
-user_text = ''
-active = False;
+userName = ''
+player2Name = ''
+player1Name = ''
 
 
 gameNotFinished=False;
 gameType ="twoPlayers"
-
+playerNameLength = 9
+nameButtonClicked = False
 
 
 def translation(toBeTranslated, gameLanguage) :
@@ -140,26 +137,32 @@ firstClick = True
 #Ajout du nom des joueur
 
 chooseName = False
-def input_box() :
-    global  user_text
+enterClick = 0
 
+def input_box() :
+    global  userName,enterClick,player1Name,player2Name
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_BACKSPACE:
-            user_text = user_text[:-1]
+            userName = userName[:-1]
         else:
-            if len(user_text) < playerNameLength:
-                user_text += event.unicode
+            if len(userName) < playerNameLength:
+                userName += event.unicode
         if event.key == pygame.K_RETURN:
-            print(user_text);
-
+            enterClick+=1
+            if enterClick ==1 :
+              player1Name= userName[:-1]
+            elif enterClick ==2 :
+              player2Name = userName[:-1]
+            userName = ''
 
 def input_name():
     global inputBox
-    if len(user_text) <= playerNameLength :
+    if len(userName) <= playerNameLength :
         gameMode()
         inputBox = surface.blit(imgInputBox, (gameScreenWidth/2-imgInputBox.get_width()/2, gameScreenHeight-100))
-        text_surface = base_font.render(user_text, True, (255, 255, 255))
+        text_surface = base_font.render(userName, True, (255, 255, 255))
         surface.blit(text_surface, (gameScreenWidth/2-imgInputBox.get_width()/2+20, gameScreenHeight-100+15))
+
 
 def gameMode():
 
@@ -193,8 +196,8 @@ def gameInitializing(gameType):
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     surface.blit(imgPlayerFrame, (605, 300))
-    text1 = font1.render(translation(user_text, gameLanguage), True, (255, 0, 0))
-    text2 = font1.render(translation("Joueur O", gameLanguage), True, (255, 0, 0))
+    text1 = font1.render(player1Name, True, (255, 0, 0))
+    text2 = font1.render(player2Name, True, (255, 0, 0))
 
     player = text1
     surface.blit(player, (630, 315))
@@ -391,22 +394,21 @@ def mouseClickDetection():
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
-NameButtonClicked = False
 while running:
     if not (chooseName):
       input_name()
 
-
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if inputBox.collidepoint(pos):
-                NameButtonClicked = True
+                nameButtonClicked = True
+
 
         if event.type == pygame.QUIT:
             running = False
         pos = pygame.mouse.get_pos()
 
-        if not (chooseName) and NameButtonClicked :
+        if not (chooseName) and nameButtonClicked :
          input_box()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
