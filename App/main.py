@@ -127,6 +127,7 @@ text3 = font1.render(translation("Le gagnant est ",gameLanguage), True, (0, 0, 0
 text4 = font1.render(translation("2 Joueurs",gameLanguage), True, (0, 0, 0))
 text5 = font1.render(translation("Robot",gameLanguage), True, (0, 0, 0))
 text6 = font1.render(translation("c'est un match nul",gameLanguage), True, (0, 0, 0))
+text7 = font1.render("Nom du joueur 1 :", True, (255, 255, 255))
 
 firstClick = True
 
@@ -140,7 +141,7 @@ chooseName = False
 enterClick = 0
 
 def input_box() :
-    global  userName,enterClick,player1Name,player2Name
+    global  userName,enterClick,player1Name,player2Name,text7
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_BACKSPACE:
             userName = userName[:-1]
@@ -151,17 +152,24 @@ def input_box() :
             enterClick+=1
             if enterClick ==1 :
               player1Name= userName[:-1]
+              text7 = font1.render("Nom du joueur 2 :", True, (255, 255, 255))
+
             elif enterClick ==2 :
               player2Name = userName[:-1]
+              surface.fill('black')
+              gameInitializing(gameType)
+
             userName = ''
 
 def input_name():
     global inputBox
     if len(userName) <= playerNameLength :
         gameMode()
-        inputBox = surface.blit(imgInputBox, (gameScreenWidth/2-imgInputBox.get_width()/2, gameScreenHeight-100))
+        inputBox = surface.blit(imgInputBox, (gameScreenWidth/2, gameScreenHeight-100))
         text_surface = base_font.render(userName, True, (255, 255, 255))
-        surface.blit(text_surface, (gameScreenWidth/2-imgInputBox.get_width()/2+20, gameScreenHeight-100+15))
+
+        surface.blit(text_surface, (gameScreenWidth/2+20, gameScreenHeight-100+15))
+        surface.blit(text7, (gameScreenWidth/2-text7.get_width(), gameScreenHeight-100+15))
 
 
 def gameMode():
