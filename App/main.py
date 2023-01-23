@@ -156,8 +156,6 @@ def input_box() :
 
             elif enterClick ==2 :
               player2Name = userName[:-1]
-              surface.fill('black')
-              gameInitializing(gameType)
 
             userName = ''
 
@@ -196,7 +194,7 @@ def gameMode():
     bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 350))
     botText = surface.blit(text5, (gameScreenWidth+70, 365))
 def gameInitializing(gameType):
-    global  clickState, board, gameNotFinished, winner,surface,text1,text2
+    global  clickState, board, gameNotFinished, winner,surface,text1,text2,player2Name,player1Name
     Player2.update(1000,1000,1,1)
     bot.update(1000,1000,1,1)
 
@@ -204,6 +202,10 @@ def gameInitializing(gameType):
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
     surface.blit(imgPlayerFrame, (605, 300))
+    if player2Name =="" :
+        player2Name = "Player O"
+    if player1Name =="" :
+        player1Name = "Player X"
     text1 = font1.render(player1Name, True, (255, 0, 0))
     text2 = font1.render(player2Name, True, (255, 0, 0))
 
@@ -278,12 +280,12 @@ def drawXorO(row, col):
             if clickState == "X":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 clickState = "O"
-                player = text1
+                player = text2
                 board[row][col] = "X"
             else :
                 surface.blit(imgO, (cellWidth * col, cellHeight * row))
                 clickState = "X"
-                player = text2
+                player = text1
                 board[row][col] = "O"""
             displayWinner(checkWin(row, col, board,True));
             playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
