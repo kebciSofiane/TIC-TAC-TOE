@@ -86,12 +86,11 @@ base_font = pygame.font.Font(None, 32)
 userName = ''
 player2Name = ''
 player1Name = ''
-
+nameButtonClicked = False
 
 gameNotFinished=False;
 gameType ="twoPlayers"
 playerNameLength = 9
-nameButtonClicked = False
 
 
 def translation(toBeTranslated, gameLanguage) :
@@ -194,10 +193,9 @@ def gameMode():
     bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 350))
     botText = surface.blit(text5, (gameScreenWidth+70, 365))
 def gameInitializing(gameType):
-    global  clickState, board, gameNotFinished, winner,surface,text1,text2,player2Name,player1Name
+    global  clickState, board, gameNotFinished, winner,surface,text1,text2,player2Name,player1Name,text7
     Player2.update(1000,1000,1,1)
     bot.update(1000,1000,1,1)
-
     surface.fill("black")
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
