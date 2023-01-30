@@ -3,11 +3,16 @@ import http.client
 import json
 import time, random, copy
 
+
+#todo
+#Player X commence toujours dans le mode bot
+# Le boutton Play ne brille pas
+
+
 pygame.init()
 
-
 screenWidth = 800
-screenHeight = 500
+screenHeight = 550
 
 gameScreenHeight = 500
 gameScreenWidth = 590
@@ -16,22 +21,18 @@ cellWidth = gameScreenWidth / 3
 cellHeight = gameScreenHeight / 3
 
 menuWidth = 200
-menuHeight = 480
+menuHeight = screenHeight
 
 surface = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Tic-Tac-Toe")
 
 running = True
-
 color = "red"
-
 
 imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
 imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
 imgTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\Title.png")
 imgSubTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\SubTitle.png")
-
-
 
 imgStartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startClicked.png")
 imgStartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\start_Unclicked.png")
@@ -48,19 +49,17 @@ imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\
 imgPlayerFrame = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\PlayerFrame.png")
 
 imgHorizentalLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\horizentalLine.png")
-imgVerticalLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\verticalLine.png")
-imgdiagonalLeftLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineLeft.png")
-imgdiagonalRightLine= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
+imgVerticalLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\verticalLine.png")
+imgdiagonalLeftLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineLeft.png")
+imgdiagonalRightLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
 
-imgWinRect= pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.png")
+imgWinRect = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.png")
 imgInputBox = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\inputBox.png")
-
-
 
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
-imgTitle = pygame.transform.scale(imgTitle,(300,200))
-imgSubTitle = pygame.transform.scale(imgSubTitle,(550,30))
+imgTitle = pygame.transform.scale(imgTitle, (300, 200))
+imgSubTitle = pygame.transform.scale(imgSubTitle, (550, 30))
 
 imgStartUnclicked = pygame.transform.scale(imgStartUnclicked, (130, 50))
 imgStartClicked = pygame.transform.scale(imgStartClicked, (130, 50))
@@ -86,20 +85,24 @@ base_font = pygame.font.Font(None, 32)
 userName = ''
 player2Name = ''
 player1Name = ''
+
+playerOScore = 0
+playerXScore = 0
+
 nameButtonClicked = False
 
-gameNotFinished=False;
-gameType ="twoPlayers"
+gameNotFinished = False
+gameType = "twoPlayers"
 playerNameLength = 9
 
 
-def translation(toBeTranslated, gameLanguage) :
-    if gameLanguage =="fr" :
+def translation(toBeTranslated, gameLanguage):
+    if gameLanguage == "fr":
         return toBeTranslated
 
     conn = http.client.HTTPSConnection("microsoft-translator-text.p.rapidapi.com")
 
-    payload = "[\r\n    {\r\n        \"Text\": \""+toBeTranslated+"\"\r\n    }\r\n]"
+    payload = "[\r\n    {\r\n        \"Text\": \"" + toBeTranslated + "\"\r\n    }\r\n]"
 
     headers = {
         'content-type': "application/json",
@@ -107,40 +110,36 @@ def translation(toBeTranslated, gameLanguage) :
         'X-RapidAPI-Host': "microsoft-translator-text.p.rapidapi.com"
     }
 
-    conn.request("POST", "/translate?to%5B0%5D="+gameLanguage+"&api-version=3.0&from=fr&profanityAction=NoAction&textType=plain",
+    conn.request("POST",
+                 "/translate?to%5B0%5D=" + gameLanguage + "&api-version=3.0&from=fr&profanityAction=NoAction&textType=plain",
                  payload, headers)
 
     res = conn.getresponse()
     json_obj = json.load(res)
 
-    theTranslation = json_obj[0].get('translations')[0].get('text');
+    theTranslation = json_obj[0].get('translations')[0].get('text')
     return theTranslation
+
 
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
 font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 
-gameLanguage = 'fr';
+gameLanguage = 'fr'
 
-
-text3 = font1.render(translation("Le gagnant est ",gameLanguage), True, (0, 0, 0))
-text4 = font1.render(translation("2 Joueurs",gameLanguage), True, (0, 0, 0))
-text5 = font1.render(translation("Robot",gameLanguage), True, (0, 0, 0))
-text6 = font1.render(translation("c'est un match nul",gameLanguage), True, (0, 0, 0))
+text3 = font1.render(translation("Le gagnant est ", gameLanguage), True, (0, 0, 0))
+text4 = font1.render(translation("2 Joueurs", gameLanguage), True, (0, 0, 0))
+text5 = font1.render(translation("Robot", gameLanguage), True, (0, 0, 0))
+text6 = font1.render(translation("c'est un match nul", gameLanguage), True, (0, 0, 0))
 text7 = font1.render("Nom du joueur 1 :", True, (255, 255, 255))
 
 firstClick = True
 
-
-#todo
-#count the wins
-#Le boutton Play ne brille pas
-#Ajout du nom des joueur
-
 chooseName = False
 enterClick = 0
 
-def input_box() :
-    global  userName,enterClick,player1Name,player2Name,text7
+
+def input_box():
+    global userName, enterClick, player1Name, player2Name, text7
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_BACKSPACE:
             userName = userName[:-1]
@@ -148,74 +147,91 @@ def input_box() :
             if len(userName) < playerNameLength:
                 userName += event.unicode
         if event.key == pygame.K_RETURN:
-            enterClick+=1
-            if enterClick ==1 :
-              player1Name= userName[:-1]
-              text7 = font1.render("Nom du joueur 2 :", True, (255, 255, 255))
+            enterClick += 1
+            if enterClick == 1:
+                player1Name = userName[:-1]
+                text7 = font1.render("Nom du joueur 2 :", True, (255, 255, 255))
 
-            elif enterClick ==2 :
-              player2Name = userName[:-1]
+            elif enterClick == 2:
+                player2Name = userName[:-1]
 
             userName = ''
 
+
 def input_name():
     global inputBox
-    if len(userName) <= playerNameLength :
+    if len(userName) <= playerNameLength:
         gameMode()
-        inputBox = surface.blit(imgInputBox, (gameScreenWidth/2, gameScreenHeight-100))
+        inputBox = surface.blit(imgInputBox, (gameScreenWidth / 2, gameScreenHeight - 100))
         text_surface = base_font.render(userName, True, (255, 255, 255))
 
-        surface.blit(text_surface, (gameScreenWidth/2+20, gameScreenHeight-100+15))
-        surface.blit(text7, (gameScreenWidth/2-text7.get_width(), gameScreenHeight-100+15))
+        surface.blit(text_surface, (gameScreenWidth / 2 + 20, gameScreenHeight - 100 + 15))
+        surface.blit(text7, (gameScreenWidth / 2 - text7.get_width(), gameScreenHeight - 100 + 15))
 
 
 def gameMode():
-
-    global  bot, Player2,textQuitDisplay, surface,textStartDisplay,textRestartDisplay,gameNotFinished
-    gameNotFinished = False;
+    global bot, Player2, textQuitDisplay, surface, textStartDisplay, textRestartDisplay, gameNotFinished
+    gameNotFinished = False
 
     surface.fill("black")
     firstClick = False
 
     pygame.draw.rect(surface, "white",
-                     pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+                     pygame.Rect((screenWidth - 210, 0, menuWidth, menuHeight)))
     textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
-    titleDisplay = surface.blit(imgTitle, (gameScreenWidth/2-imgTitle.get_width()/2, 100))
-    subTitleDisplay = surface.blit(imgSubTitle, (gameScreenWidth/2-imgSubTitle.get_width()/2,  350))
-
+    titleDisplay = surface.blit(imgTitle, (gameScreenWidth / 2 - imgTitle.get_width() / 2, 100))
+    subTitleDisplay = surface.blit(imgSubTitle, (gameScreenWidth / 2 - imgSubTitle.get_width() / 2, 350))
 
     textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
-    #TODO
-    #Réorganiser tout ça sans les chiffres
-    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth+15 , 300))
-    Player2Text = surface.blit(text4, (gameScreenWidth+40, 315))
-    bot = surface.blit(imgPlayerFrame, (gameScreenWidth+15, 350))
-    botText = surface.blit(text5, (gameScreenWidth+70, 365))
+    # TODO
+    # Réorganiser tout ça sans les chiffres
+    Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth + 15, 300))
+    Player2Text = surface.blit(text4, (gameScreenWidth + 40, 315))
+    bot = surface.blit(imgPlayerFrame, (gameScreenWidth + 15, 350))
+    botText = surface.blit(text5, (gameScreenWidth + 70, 365))
+
+
 def gameInitializing(gameType):
-    global  clickState, board, gameNotFinished, winner,surface,text1,text2,player2Name,player1Name,text7
-    Player2.update(1000,1000,1,1)
-    bot.update(1000,1000,1,1)
+    global clickState, board, gameNotFinished, winner, surface, text1, text2, player2Name, player1Name, text7,  playerXScore,playerXScore
+    Player2.update(1000, 1000, 1, 1)
+    bot.update(1000, 1000, 1, 1)
     surface.fill("black")
     pygame.draw.rect(surface, "white",
-                     pygame.Rect((screenWidth - 210, screenHeight - 490, menuWidth, menuHeight)))
+                     pygame.Rect((screenWidth - 210, 0, menuWidth, menuHeight)))
     surface.blit(imgPlayerFrame, (605, 300))
-    if player2Name =="" :
+    if player2Name == "":
         player2Name = "Player O"
-    if player1Name =="" :
+    if player1Name == "":
         player1Name = "Player X"
     text1 = font1.render(player1Name, True, (255, 0, 0))
     text2 = font1.render(player2Name, True, (255, 0, 0))
+    textScorePlayerX = font1.render(player1Name+" : "+str(playerXScore), True, (255, 255, 255))
+    textScorePlayerO = font1.render(player2Name+" : "+str(playerOScore), True, (255, 255, 255))
 
-    player = text1
+    surface.blit(textScorePlayerX, (gameScreenWidth/3-text1.get_width()/2, gameScreenHeight))
+    surface.blit(textScorePlayerO, (gameScreenWidth*2/3-text2.get_width()/2, gameScreenHeight))
+
+
+
+    print("Score O : ",playerOScore, "Score X :",playerXScore)
+
+    states = ["X", "O"]
+    nbr = random.choice(states)
+    clickState = nbr
+    if nbr =="X" :
+        player = text1
+    else :
+        player = text2
+
     surface.blit(player, (630, 315))
     pygame.display.flip()
-    clickState = "X"
-    winner =""
+    winner = ""
     board = [["", "", ""],
              ["", "", ""],
              ["", "", ""]]
-    list = "";
+    list = ""
+
 
 gameMode()
 
@@ -223,156 +239,162 @@ gameMode()
 def gameRestart(gameType):
     global rect, textQuitDisplay, textRestartDisplay, textStartDisplay, board, gameNotFinished, clickState
 
-    bot.update(1000, 1000, 400, 300);
-    Player2.update(1000, 1000, 400, 300);
+    bot.update(1000, 1000, 400, 300)
+    Player2.update(1000, 1000, 400, 300)
     pygame.display.update()
     surface.fill("black")
     gameInitializing(gameType)
 
 
-
-
-
 def bestMove():
-    (i,j) = (-1,-1);
+    (i, j) = (-1, -1)
 
-    possibleMoves=[];
+    possibleMoves = []
     for i in range(3):
         for j in range(3):
-            if(board[i][j] == ""):
-                possibleMoves.append((i,j))
+            if (board[i][j] == ""):
+                possibleMoves.append((i, j))
 
-    if len(possibleMoves) == 0 :
-        return  (-1,-1)
+    if len(possibleMoves) == 0:
+        return (-1, -1)
 
-    for let in ['O','X'] :
-        for (i,j) in possibleMoves:
+    for let in ['O', 'X']:
+        for (i, j) in possibleMoves:
             boardCopy = copy.deepcopy(board)
-            boardCopy[i][j]= let;
-            if (checkWin(i,j,boardCopy,False) ) == let :
-                return (i,j);
+            boardCopy[i][j] = let
+            if (checkWin(i, j, boardCopy, False)) == let:
+                return (i, j)
 
-    cornersOpen =[];
-    for (i,j) in possibleMoves :
-        if (i,j) in [(0,0),(0,2),(2,0),(2,2)]:
-            cornersOpen.append((i,j));
-    if(len(cornersOpen)>0):
-        return random.choice(cornersOpen);
+    cornersOpen = []
+    for (i, j) in possibleMoves:
+        if (i, j) in [(0, 0), (0, 2), (2, 0), (2, 2)]:
+            cornersOpen.append((i, j))
+    if (len(cornersOpen) > 0):
+        return random.choice(cornersOpen)
 
+    if (1, 1) in possibleMoves:
+        return (1, 1);
 
-    if (1,1) in possibleMoves :
-        return (1,1);
-
-    edgesOpen =[];
-    for (i,j) in possibleMoves :
-        if (i,j) in [(0,1),(1,0),(1,2),(2,1)]:
-            edgesOpen.append((i,j));
-    if(len(edgesOpen)>0):
+    edgesOpen = []
+    for (i, j) in possibleMoves:
+        if (i, j) in [(0, 1), (1, 0), (1, 2), (2, 1)]:
+            edgesOpen.append((i, j));
+    if (len(edgesOpen) > 0):
         return random.choice(edgesOpen);
 
-    return (i,j);
+    return (i, j);
+
+
 def drawXorO(row, col):
     global clickState, player
     if gameType == "twoPlayers":
-         if board[row][col] == "":
+        if board[row][col] == "":
             if clickState == "X":
                 surface.blit(imgX, (cellWidth * col, cellHeight * row))
                 clickState = "O"
                 player = text2
                 board[row][col] = "X"
-            else :
+            else:
                 surface.blit(imgO, (cellWidth * col, cellHeight * row))
                 clickState = "X"
                 player = text1
                 board[row][col] = "O"""
-            displayWinner(checkWin(row, col, board,True));
+            displayWinner(checkWin(row, col, board, True));
             playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
             surface.blit(player, (630, 315))
             pygame.display.update()
 
     else:
         if board[row][col] == "":
-                surface.blit(imgX, (cellWidth * col, cellHeight * row))
-                player = text2
-                board[row][col] = "X"
-                displayWinner(checkWin(row, col, board,True));
+            surface.blit(imgX, (cellWidth * col, cellHeight * row))
+            player = text2
+            board[row][col] = "X"
+            displayWinner(checkWin(row, col, board, True));
 
-                (i,j) = bestMove();
-                if (i,j) != (-1,-1) and not checkBoardFull() :
-                    surface.blit(imgO, (cellWidth * j, cellHeight * i))
-                    board[i][j] = "O"
-                    displayWinner(checkWin(i, j, board,True));
+            (i, j) = bestMove();
+            if (i, j) != (-1, -1) and not checkBoardFull():
+                surface.blit(imgO, (cellWidth * j, cellHeight * i))
+                board[i][j] = "O"
+                displayWinner(checkWin(i, j, board, True));
 
 
-                else:
-                    gameNotFinished = False;
+            else:
+                gameNotFinished = False;
+
 
 def checkBoardFull():
     full = True
-    for raw in board :
-        for col in raw :
-             if col == "" :
-                  full = False
-    return  full
+    for raw in board:
+        for col in raw:
+            if col == "":
+                full = False
+    return full
+
+
 def displayWinner(winner):
-    global gameNotFinished;
-    if winner== "X" :
+    global gameNotFinished,nbr,playerXScore,playerOScore
+    if winner == "X":
+        playerXScore+=1
+
         gameNotFinished = False
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text1, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
 
-    elif winner=="O" :
+    elif winner == "O":
+        playerOScore+=1
         gameNotFinished = False
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
         surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
 
 
-    elif checkBoardFull() :
+    elif checkBoardFull():
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
-        surface.blit(text6, (gameScreenWidth / 2 - imgWinRect.get_width()/2+text6
-                             .get_width()/3, gameScreenHeight / 2 -imgWinRect.get_height()/2 +text6.get_height()/2))
-
+        surface.blit(text6, (gameScreenWidth / 2 - imgWinRect.get_width() / 2 + text6
+                             .get_width() / 3,
+                             gameScreenHeight / 2 - imgWinRect.get_height() / 2 + text6.get_height() / 2))
 
     pygame.display.update()
-def checkWin(row, col,boxUsed, drawLine):
+
+
+def checkWin(row, col, boxUsed, drawLine):
     global winner
 
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
         if drawLine:
-         surface.blit(imgHorizentalLine, (20, row*cellHeight+ cellHeight/3))
+            surface.blit(imgHorizentalLine, (20, row * cellHeight + cellHeight / 3))
         winner = boxUsed[row][0]
 
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
         if drawLine:
-         surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3,10))
-        winner=boxUsed[1][col]
+            surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3, 10))
+        winner = boxUsed[1][col]
 
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
         if drawLine:
-         surface.blit(imgdiagonalLeftLine, (40,30))
-        winner="X"
+            surface.blit(imgdiagonalLeftLine, (40, 30))
+        winner = "X"
 
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "O":
         if drawLine:
-         surface.blit(imgdiagonalLeftLine, (40,30))
-        winner="O"
+            surface.blit(imgdiagonalLeftLine, (40, 30))
+        winner = "O"
 
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "X":
         if drawLine:
-         surface.blit(imgdiagonalRightLine, (40,30))
-        winner="X"
+            surface.blit(imgdiagonalRightLine, (40, 30))
+        winner = "X"
 
     elif boxUsed[2][0] == boxUsed[1][1] == boxUsed[0][2] == "O":
         if drawLine:
-         surface.blit(imgdiagonalRightLine, (40, 30))
-        winner="O"
+            surface.blit(imgdiagonalRightLine, (40, 30))
+        winner = "O"
 
-    else :
-        winner = " ";
+    else:
+        winner = " "
 
-    return  winner;
+    return winner
 
 
 def findColAndRow(x, y):
@@ -402,22 +424,22 @@ def mouseClickDetection():
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
+
 while running:
     if not (chooseName):
-      input_name()
+        input_name()
 
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if inputBox.collidepoint(pos):
                 nameButtonClicked = True
 
-
         if event.type == pygame.QUIT:
             running = False
         pos = pygame.mouse.get_pos()
 
-        if not (chooseName) and nameButtonClicked :
-         input_box()
+        if not (chooseName) and nameButtonClicked:
+            input_box()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if textQuitDisplay.collidepoint(pos):
@@ -435,7 +457,7 @@ while running:
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "bot"
-                chooseName =True
+                chooseName = True
                 gameInitializing(gameType)
                 gameNotFinished = True
 
@@ -443,7 +465,7 @@ while running:
                 textStartDisplay = surface.blit(imgStartClicked, (625, 40))
                 pygame.display.flip()
                 gameType = "twoPlayers"
-                chooseName =True
+                chooseName = True
                 gameInitializing(gameType)
                 gameNotFinished = True
             elif textStartDisplay.collidepoint(pos):
@@ -463,4 +485,3 @@ while running:
 
         if gameNotFinished:
             mouseClickDetection()
-
