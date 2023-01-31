@@ -4,8 +4,6 @@ import json
 import time, random, copy
 
 # todo
-# Le boutton Play ne brille pas
-# Remove the restart and start button on the main page
 # Parfois y'a un beug ou quand x gagne en mode bot le o jour directement et gagne aussi
 
 
@@ -90,7 +88,7 @@ playerOScore = 0
 playerXScore = 0
 
 nameButtonClicked = False
-displayGameMode =False
+displayGameMode = False
 
 gameNotFinished = False
 gameType = "twoPlayers"
@@ -172,7 +170,7 @@ def input_name():
 
 
 def gameMode():
-    global bot, Player2, textQuitDisplay, surface, textStartDisplay,displayGameMode, textRestartDisplay, gameNotFinished, playerXScore, playerOScore
+    global bot, Player2, textQuitDisplay, surface, textStartDisplay, displayGameMode, textRestartDisplay, gameNotFinished, playerXScore, playerOScore
     gameNotFinished = False
     displayGameMode = True
 
@@ -196,9 +194,8 @@ def gameMode():
     botText = surface.blit(text5, (gameScreenWidth + 70, 365))
 
 
-
 def gameInitializing(gameType):
-    global clickState, board, gameNotFinished,displayGameMode, winner, surface, text1, text2, player2Name, player1Name, text7, playerXScore, playerXScore
+    global clickState, board, gameNotFinished, displayGameMode, winner, surface, text1, text2, player2Name, player1Name, text7, playerXScore, playerXScore
     displayGameMode = False
     Player2.update(1000, 1000, 1, 1)
     bot.update(1000, 1000, 1, 1)
@@ -488,10 +485,15 @@ while running:
 
         elif textQuitDisplay.collidepoint(pos):
             textQuitDisplay = surface.blit(imgQuitOverview, (625, 100))
+
+        elif textStartDisplay.collidepoint(pos):
+            textStartDisplay = surface.blit(imgStartOverview, (625, 40))
         elif not displayGameMode:
             textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
             textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
-        textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+            textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+        else:
+            textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
 
         pygame.display.flip()
 
