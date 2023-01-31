@@ -4,7 +4,8 @@ import json
 import time, random, copy
 
 # todo
-# Le boutton Play ne brille pas
+#Le boutton Play ne brille pas
+#Remove the restart and start button on the main page
 
 
 pygame.init()
@@ -210,9 +211,6 @@ def gameInitializing(gameType):
 
     surface.blit(textScorePlayerX, (gameScreenWidth / 3 - text1.get_width() / 2, gameScreenHeight))
     surface.blit(textScorePlayerO, (gameScreenWidth * 2 / 3 - text2.get_width() / 2, gameScreenHeight))
-
-    print("Score O : ", playerOScore, "Score X :", playerXScore)
-
     states = ["X", "O"]
     firstPlaying = random.choice(states)
     clickState = firstPlaying
@@ -273,16 +271,16 @@ def bestMove():
         return random.choice(cornersOpen)
 
     if (1, 1) in possibleMoves:
-        return (1, 1);
+        return (1, 1)
 
     edgesOpen = []
     for (i, j) in possibleMoves:
         if (i, j) in [(0, 1), (1, 0), (1, 2), (2, 1)]:
-            edgesOpen.append((i, j));
+            edgesOpen.append((i, j))
     if (len(edgesOpen) > 0):
-        return random.choice(edgesOpen);
+        return random.choice(edgesOpen)
 
-    return (i, j);
+    return (i, j)
 
 
 def drawXorO(row, col):
@@ -471,6 +469,8 @@ while running:
                 gameInitializing(gameType)
                 gameNotFinished = True
             elif textStartDisplay.collidepoint(pos):
+                text7 = font1.render("Nom du joueur 1 :", True, (255, 255, 255))
+                chooseName = False
                 gameMode()
 
         elif textRestartDisplay.collidepoint(pos):
