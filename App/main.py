@@ -4,8 +4,9 @@ import json
 import time, random, copy
 
 # todo
-#Le boutton Play ne brille pas
-#Remove the restart and start button on the main page
+# Le boutton Play ne brille pas
+# Remove the restart and start button on the main page
+# Parfois y'a un beug ou quand x gagne en mode bot le o jour directement et gagne aussi
 
 
 pygame.init()
@@ -89,6 +90,7 @@ playerOScore = 0
 playerXScore = 0
 
 nameButtonClicked = False
+displayGameMode =False
 
 gameNotFinished = False
 gameType = "twoPlayers"
@@ -170,19 +172,21 @@ def input_name():
 
 
 def gameMode():
-    global bot, Player2, textQuitDisplay, surface, textStartDisplay, textRestartDisplay, gameNotFinished
+    global bot, Player2, textQuitDisplay, surface, textStartDisplay,displayGameMode, textRestartDisplay, gameNotFinished, playerXScore, playerOScore
     gameNotFinished = False
+    displayGameMode = True
 
     surface.fill("black")
     firstClick = False
+    playerXScore = 0
+    playerOScore = 0
 
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, 0, menuWidth, menuHeight)))
-    textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
     titleDisplay = surface.blit(imgTitle, (gameScreenWidth / 2 - imgTitle.get_width() / 2, 100))
     subTitleDisplay = surface.blit(imgSubTitle, (gameScreenWidth / 2 - imgSubTitle.get_width() / 2, 350))
-
-    textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
+    textStartDisplay = surface.blit(imgStartUnclicked, (1000, 40))
+    textRestartDisplay = surface.blit(imgRestartUnclicked, (1000, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
     # TODO
     # Réorganiser tout ça sans les chiffres
@@ -192,8 +196,10 @@ def gameMode():
     botText = surface.blit(text5, (gameScreenWidth + 70, 365))
 
 
+
 def gameInitializing(gameType):
-    global clickState, board, gameNotFinished, winner, surface, text1, text2, player2Name, player1Name, text7, playerXScore, playerXScore
+    global clickState, board, gameNotFinished,displayGameMode, winner, surface, text1, text2, player2Name, player1Name, text7, playerXScore, playerXScore
+    displayGameMode = False
     Player2.update(1000, 1000, 1, 1)
     bot.update(1000, 1000, 1, 1)
     surface.fill("black")
@@ -204,10 +210,14 @@ def gameInitializing(gameType):
         player2Name = "Player O"
     if player1Name == "":
         player1Name = "Player X"
+
     text1 = font1.render(player1Name, True, (255, 0, 0))
     text2 = font1.render(player2Name, True, (255, 0, 0))
     textScorePlayerX = font1.render(player1Name + " : " + str(playerXScore), True, (255, 255, 255))
     textScorePlayerO = font1.render(player2Name + " : " + str(playerOScore), True, (255, 255, 255))
+
+    textStartDisplay.update(625, 40, 20, 29)
+    textRestartDisplay.update(625, 160, 20, 29)
 
     surface.blit(textScorePlayerX, (gameScreenWidth / 3 - text1.get_width() / 2, gameScreenHeight))
     surface.blit(textScorePlayerO, (gameScreenWidth * 2 / 3 - text2.get_width() / 2, gameScreenHeight))
@@ -312,7 +322,7 @@ def drawXorO(row, col):
 
 
 def botPlay():
-    (i, j) = bestMove();
+    (i, j) = bestMove()
     if (i, j) != (-1, -1) and not checkBoardFull():
         surface.blit(imgO, (cellWidth * j, cellHeight * i))
         board[i][j] = "O"
@@ -478,10 +488,10 @@ while running:
 
         elif textQuitDisplay.collidepoint(pos):
             textQuitDisplay = surface.blit(imgQuitOverview, (625, 100))
-        else:
+        elif not displayGameMode:
             textStartDisplay = surface.blit(imgStartUnclicked, (625, 40))
             textRestartDisplay = surface.blit(imgRestartUnclicked, (625, 160))
-            textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
+        textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
 
         pygame.display.flip()
 
