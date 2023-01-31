@@ -5,6 +5,7 @@ import time, random, copy
 
 # todo
 # Parfois y'a un beug ou quand x gagne en mode bot le o jour directement et gagne aussi
+# réorganiser le code
 
 
 pygame.init()
