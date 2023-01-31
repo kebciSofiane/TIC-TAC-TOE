@@ -3,9 +3,7 @@ import http.client
 import json
 import time, random, copy
 
-
-#todo
-#Player X commence toujours dans le mode bot
+# todo
 # Le boutton Play ne brille pas
 
 
@@ -94,6 +92,7 @@ nameButtonClicked = False
 gameNotFinished = False
 gameType = "twoPlayers"
 playerNameLength = 9
+botStarts = False
 
 
 def translation(toBeTranslated, gameLanguage):
@@ -193,7 +192,7 @@ def gameMode():
 
 
 def gameInitializing(gameType):
-    global clickState, board, gameNotFinished, winner, surface, text1, text2, player2Name, player1Name, text7,  playerXScore,playerXScore
+    global clickState, board, gameNotFinished, winner, surface, text1, text2, player2Name, player1Name, text7, playerXScore, playerXScore
     Player2.update(1000, 1000, 1, 1)
     bot.update(1000, 1000, 1, 1)
     surface.fill("black")
@@ -206,22 +205,20 @@ def gameInitializing(gameType):
         player1Name = "Player X"
     text1 = font1.render(player1Name, True, (255, 0, 0))
     text2 = font1.render(player2Name, True, (255, 0, 0))
-    textScorePlayerX = font1.render(player1Name+" : "+str(playerXScore), True, (255, 255, 255))
-    textScorePlayerO = font1.render(player2Name+" : "+str(playerOScore), True, (255, 255, 255))
+    textScorePlayerX = font1.render(player1Name + " : " + str(playerXScore), True, (255, 255, 255))
+    textScorePlayerO = font1.render(player2Name + " : " + str(playerOScore), True, (255, 255, 255))
 
-    surface.blit(textScorePlayerX, (gameScreenWidth/3-text1.get_width()/2, gameScreenHeight))
-    surface.blit(textScorePlayerO, (gameScreenWidth*2/3-text2.get_width()/2, gameScreenHeight))
+    surface.blit(textScorePlayerX, (gameScreenWidth / 3 - text1.get_width() / 2, gameScreenHeight))
+    surface.blit(textScorePlayerO, (gameScreenWidth * 2 / 3 - text2.get_width() / 2, gameScreenHeight))
 
-
-
-    print("Score O : ",playerOScore, "Score X :",playerXScore)
+    print("Score O : ", playerOScore, "Score X :", playerXScore)
 
     states = ["X", "O"]
-    nbr = random.choice(states)
-    clickState = nbr
-    if nbr =="X" :
+    firstPlaying = random.choice(states)
+    clickState = firstPlaying
+    if firstPlaying == "X":
         player = text1
-    else :
+    else:
         player = text2
 
     surface.blit(player, (630, 315))
@@ -231,6 +228,9 @@ def gameInitializing(gameType):
              ["", "", ""],
              ["", "", ""]]
     list = ""
+
+    if firstPlaying == "O" and gameType == 'bot':
+        botPlay()
 
 
 gameMode()
@@ -299,7 +299,7 @@ def drawXorO(row, col):
                 clickState = "X"
                 player = text1
                 board[row][col] = "O"""
-            displayWinner(checkWin(row, col, board, True));
+            displayWinner(checkWin(row, col, board, True))
             playerDisplay = surface.blit(imgPlayerFrame, (605, 300))
             surface.blit(player, (630, 315))
             pygame.display.update()
@@ -309,17 +309,19 @@ def drawXorO(row, col):
             surface.blit(imgX, (cellWidth * col, cellHeight * row))
             player = text2
             board[row][col] = "X"
-            displayWinner(checkWin(row, col, board, True));
-
-            (i, j) = bestMove();
-            if (i, j) != (-1, -1) and not checkBoardFull():
-                surface.blit(imgO, (cellWidth * j, cellHeight * i))
-                board[i][j] = "O"
-                displayWinner(checkWin(i, j, board, True));
+            displayWinner(checkWin(row, col, board, True))
+            botPlay()
 
 
-            else:
-                gameNotFinished = False;
+def botPlay():
+    (i, j) = bestMove();
+    if (i, j) != (-1, -1) and not checkBoardFull():
+        surface.blit(imgO, (cellWidth * j, cellHeight * i))
+        board[i][j] = "O"
+        displayWinner(checkWin(i, j, board, True))
+
+    else:
+        gameNotFinished = False
 
 
 def checkBoardFull():
@@ -332,9 +334,9 @@ def checkBoardFull():
 
 
 def displayWinner(winner):
-    global gameNotFinished,nbr,playerXScore,playerOScore
+    global gameNotFinished, nbr, playerXScore, playerOScore
     if winner == "X":
-        playerXScore+=1
+        playerXScore += 1
 
         gameNotFinished = False
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
@@ -342,7 +344,7 @@ def displayWinner(winner):
         surface.blit(text1, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
 
     elif winner == "O":
-        playerOScore+=1
+        playerOScore += 1
         gameNotFinished = False
         surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
         surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
