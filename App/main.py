@@ -1,11 +1,9 @@
 import pygame
-import http.client
-import json
 import time, random, copy
 
 # todo
 # Parfois y'a un beug ou quand x gagne en mode bot le o jour directement et gagne aussi
-# réorganiser le code
+# le prbleme du scroll
 
 
 
@@ -54,7 +52,7 @@ imgdiagonalLeftLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Imag
 imgdiagonalRightLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
 
 imgWinRect = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.png")
-imgInputBox = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\inputBox.png")
+imgInputFrame = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\inputBox.png")
 
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
@@ -77,9 +75,9 @@ imgPlayerFrame = pygame.transform.scale(imgPlayerFrame, (170, 50))
 imgHorizentalLine = pygame.transform.scale(imgHorizentalLine, (540, 61))
 imgVerticalLine = pygame.transform.scale(imgVerticalLine, (61, 480))
 
-imgInputBox = pygame.transform.scale(imgInputBox, (170, 50))
+imgInputFrame = pygame.transform.scale(imgInputFrame, (170, 50))
 
-imgInputBox2 = imgInputBox.copy()
+imgInputBox2 = imgInputFrame.copy()
 
 base_font = pygame.font.Font(None, 32)
 userName = ''
@@ -138,14 +136,13 @@ def input_box():
 
 
 def input_name():
-    global inputBox
+    global inputFrameName
     if len(userName) <= playerNameLength:
         gameMode()
-        inputBox = surface.blit(imgInputBox, (gameScreenWidth / 2, gameScreenHeight - 100))
-        text_surface = base_font.render(userName, True, (255, 255, 255))
-
-        surface.blit(text_surface, (gameScreenWidth / 2 + 20, gameScreenHeight - 100 + 15))
-        surface.blit(text7, (gameScreenWidth / 2 - text7.get_width(), gameScreenHeight - 100 + 15))
+        inputFrameName = surface.blit(imgInputFrame, (gameScreenWidth / 2, gameScreenHeight - 100))
+        textDisplayOnInputFrame = base_font.render(userName, True, (255, 255, 255))
+        surface.blit(textDisplayOnInputFrame, (gameScreenWidth / 2 + 20, gameScreenHeight - 85))
+        surface.blit(text7, (gameScreenWidth / 2 - text7.get_width(), gameScreenHeight - 85))
 
 
 def gameMode():
@@ -154,23 +151,20 @@ def gameMode():
     displayGameMode = True
 
     surface.fill("black")
-    firstClick = False
     playerXScore = 0
     playerOScore = 0
 
     pygame.draw.rect(surface, "white",
                      pygame.Rect((screenWidth - 210, 0, menuWidth, menuHeight)))
-    titleDisplay = surface.blit(imgTitle, (gameScreenWidth / 2 - imgTitle.get_width() / 2, 100))
-    subTitleDisplay = surface.blit(imgSubTitle, (gameScreenWidth / 2 - imgSubTitle.get_width() / 2, 350))
+    surface.blit(imgTitle, (gameScreenWidth / 2 - imgTitle.get_width() / 2, 100))
+    surface.blit(imgSubTitle, (gameScreenWidth / 2 - imgSubTitle.get_width() / 2, 350))
     textStartDisplay = surface.blit(imgStartUnclicked, (1000, 40))
     textRestartDisplay = surface.blit(imgRestartUnclicked, (1000, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
-    # TODO
-    # Réorganiser tout ça sans les chiffres
     Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth + 15, 300))
-    Player2Text = surface.blit(text4, (gameScreenWidth + 40, 315))
+    surface.blit(text4, (gameScreenWidth + 40, 315))
     bot = surface.blit(imgPlayerFrame, (gameScreenWidth + 15, 350))
-    botText = surface.blit(text5, (gameScreenWidth + 70, 365))
+    surface.blit(text5, (gameScreenWidth + 70, 365))
 
 
 def gameInitializing(gameType):
@@ -211,8 +205,6 @@ def gameInitializing(gameType):
     board = [["", "", ""],
              ["", "", ""],
              ["", "", ""]]
-    list = ""
-
     if firstPlaying == "O" and gameType == 'bot':
         botPlay()
 
@@ -304,9 +296,6 @@ def botPlay():
         board[i][j] = "O"
         displayWinner(checkWin(i, j, board, True))
 
-    else:
-        gameNotFinished = False
-
 
 def checkBoardFull():
     full = True
@@ -323,23 +312,22 @@ def displayWinner(winner):
         playerXScore += 1
 
         gameNotFinished = False
-        surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
-        surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
-        surface.blit(text1, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
+        surface.blit(imgWinRect, (gameScreenWidth / 2 - imgWinRect.get_width()/2, gameScreenHeight / 2 - imgWinRect.get_height()/2))
+        surface.blit(text3, (gameScreenWidth / 2-text3.get_width()/2, gameScreenHeight / 2 -40))
+        surface.blit(text1, (gameScreenWidth / 2 -text1.get_width()/2, gameScreenHeight / 2 + text3.get_height()/2))
 
     elif winner == "O":
         playerOScore += 1
         gameNotFinished = False
-        surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
-        surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 80))
-        surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 - 30))
+        surface.blit(imgWinRect, (gameScreenWidth / 2 - imgWinRect.get_width()/2, gameScreenHeight / 2 - imgWinRect.get_height()/2))
+        surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 40))
+        surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 + text3.get_height()/2))
 
 
     elif checkBoardFull():
-        surface.blit(imgWinRect, (gameScreenWidth / 2 - 150, gameScreenHeight / 2 - 130))
+        surface.blit(imgWinRect, (gameScreenWidth / 2 - imgWinRect.get_width()/2, gameScreenHeight / 2 - imgWinRect.get_height()/2))
         surface.blit(text6, (gameScreenWidth / 2 - imgWinRect.get_width() / 2 + text6
-                             .get_width() / 3,
-                             gameScreenHeight / 2 - imgWinRect.get_height() / 2 + text6.get_height() / 2))
+                             .get_width() / 2, gameScreenHeight / 2-text6.get_height()/2))
 
     pygame.display.update()
 
@@ -417,7 +405,7 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if inputBox.collidepoint(pos):
+            if inputFrameName.collidepoint(pos):
                 nameButtonClicked = True
 
         if event.type == pygame.QUIT:
@@ -455,7 +443,7 @@ while running:
                 gameInitializing(gameType)
                 gameNotFinished = True
             elif textStartDisplay.collidepoint(pos):
-                text7 = font1.render("Nom du joueur 1 :", True, (255, 255, 255))
+                text7 = font1.render("Player 1's name:", True, (255, 255, 255))
                 chooseName = False
                 gameMode()
 
