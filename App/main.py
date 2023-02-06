@@ -8,6 +8,7 @@ import time, random, copy
 # réorganiser le code
 
 
+
 pygame.init()
 
 screenWidth = 800
@@ -97,29 +98,6 @@ playerNameLength = 9
 botStarts = False
 
 
-def translation(toBeTranslated, gameLanguage):
-    if gameLanguage == "fr":
-        return toBeTranslated
-
-    conn = http.client.HTTPSConnection("microsoft-translator-text.p.rapidapi.com")
-
-    payload = "[\r\n    {\r\n        \"Text\": \"" + toBeTranslated + "\"\r\n    }\r\n]"
-
-    headers = {
-        'content-type': "application/json",
-        'X-RapidAPI-Key': "6abcd70b6emshc428c20a28bad0dp1e7404jsn07b33286d64c",
-        'X-RapidAPI-Host': "microsoft-translator-text.p.rapidapi.com"
-    }
-
-    conn.request("POST",
-                 "/translate?to%5B0%5D=" + gameLanguage + "&api-version=3.0&from=fr&profanityAction=NoAction&textType=plain",
-                 payload, headers)
-
-    res = conn.getresponse()
-    json_obj = json.load(res)
-
-    theTranslation = json_obj[0].get('translations')[0].get('text')
-    return theTranslation
 
 
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
@@ -127,11 +105,11 @@ font2 = pygame.font.SysFont('freesanbold.ttf', 30)
 
 gameLanguage = 'fr'
 
-text3 = font1.render(translation("Le gagnant est ", gameLanguage), True, (0, 0, 0))
-text4 = font1.render(translation("2 Joueurs", gameLanguage), True, (0, 0, 0))
-text5 = font1.render(translation("Robot", gameLanguage), True, (0, 0, 0))
-text6 = font1.render(translation("c'est un match nul", gameLanguage), True, (0, 0, 0))
-text7 = font1.render("Nom du joueur 1 :", True, (255, 255, 255))
+text3 = font1.render("The winner is ", True, (0, 0, 0))
+text4 = font1.render("2 Players", True, (0, 0, 0))
+text5 = font1.render("Bot", True, (0, 0, 0))
+text6 = font1.render("It's a draw", True, (0, 0, 0))
+text7 = font1.render("Player 1's name:", True, (255, 255, 255))
 
 firstClick = True
 
@@ -151,7 +129,7 @@ def input_box():
             enterClick += 1
             if enterClick == 1:
                 player1Name = userName[:-1]
-                text7 = font1.render("Nom du joueur 2 :", True, (255, 255, 255))
+                text7 = font1.render("Player 2's name :", True, (255, 255, 255))
 
             elif enterClick == 2:
                 player2Name = userName[:-1]
