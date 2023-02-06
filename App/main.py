@@ -337,12 +337,12 @@ def checkWin(row, col, boxUsed, drawLine):
 
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
         if drawLine:
-            surface.blit(imgHorizentalLine, (20, row * cellHeight + cellHeight / 3))
+            surface.blit(imgHorizentalLine, (20, row * cellHeight + cellHeight / 3-imgHorizentalLine.get_height()/3))
         winner = boxUsed[row][0]
 
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
         if drawLine:
-            surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3, 10))
+            surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3-imgVerticalLine.get_width()/4, 10))
         winner = boxUsed[1][col]
 
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
