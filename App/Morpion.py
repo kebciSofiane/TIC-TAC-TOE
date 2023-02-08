@@ -6,7 +6,6 @@ import time, random, copy
 # le prbleme du scroll
 
 
-
 pygame.init()
 
 screenWidth = 800
@@ -95,19 +94,20 @@ gameType = "twoPlayers"
 playerNameLength = 9
 botStarts = False
 
-
-
-
 font1 = pygame.font.SysFont('freesanbold.ttf', 40)
 font2 = pygame.font.SysFont('freesanbold.ttf', 30)
+font3 = pygame.font.SysFont('freesanbold.ttf', 20)
 
 gameLanguage = 'fr'
 
-text3 = font1.render("The winner is ", True, (0, 0, 0))
-text4 = font1.render("2 Players", True, (0, 0, 0))
-text5 = font1.render("Bot", True, (0, 0, 0))
-text6 = font1.render("It's a draw", True, (0, 0, 0))
-text7 = font1.render("Player 1's name:", True, (255, 255, 255))
+announceWinnerText = font1.render("The winner is ", True, (0, 0, 0))
+twoPlayersText = font1.render("2 Players", True, (0, 0, 0))
+botText = font1.render("Bot", True, (0, 0, 0))
+drawText = font1.render("It's a draw", True, (0, 0, 0))
+currentPlayerText = font1.render("Player 1's name:", True, (255, 255, 255))
+creditText = font3.render("Sofiane Kebci", True, (255, 255, 255))
+yearText = font3.render("2023", True, (255, 255, 255))
+versionText = font3.render("v1.0", True, (255, 255, 255))
 
 firstClick = True
 
@@ -116,7 +116,7 @@ enterClick = 0
 
 
 def input_box():
-    global userName, enterClick, player1Name, player2Name, text7
+    global userName, enterClick, player1Name, player2Name, currentPlayerText
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_BACKSPACE:
             userName = userName[:-1]
@@ -127,7 +127,7 @@ def input_box():
             enterClick += 1
             if enterClick == 1:
                 player1Name = userName[:-1]
-                text7 = font1.render("Player 2's name :", True, (255, 255, 255))
+                currentPlayerText = font1.render("Player 2's name :", True, (255, 255, 255))
 
             elif enterClick == 2:
                 player2Name = userName[:-1]
@@ -142,7 +142,7 @@ def input_name():
         inputFrameName = surface.blit(imgInputFrame, (gameScreenWidth / 2, gameScreenHeight - 100))
         textDisplayOnInputFrame = base_font.render(userName, True, (255, 255, 255))
         surface.blit(textDisplayOnInputFrame, (gameScreenWidth / 2 + 20, gameScreenHeight - 85))
-        surface.blit(text7, (gameScreenWidth / 2 - text7.get_width(), gameScreenHeight - 85))
+        surface.blit(currentPlayerText, (gameScreenWidth / 2 - currentPlayerText.get_width(), gameScreenHeight - 85))
 
 
 def gameMode():
@@ -162,13 +162,16 @@ def gameMode():
     textRestartDisplay = surface.blit(imgRestartUnclicked, (1000, 160))
     textQuitDisplay = surface.blit(imgQuitUnclicked, (625, 100))
     Player2 = surface.blit(imgPlayerFrame, (gameScreenWidth + 15, 300))
-    surface.blit(text4, (gameScreenWidth + 40, 315))
+    surface.blit(twoPlayersText, (gameScreenWidth + 40, 315))
     bot = surface.blit(imgPlayerFrame, (gameScreenWidth + 15, 350))
-    surface.blit(text5, (gameScreenWidth + 70, 365))
+    surface.blit(botText, (gameScreenWidth + 70, 365))
+    surface.blit(creditText, (gameScreenWidth - creditText.get_width(), gameScreenHeight+5))
+    surface.blit(yearText, (gameScreenWidth - 2*yearText.get_width(), gameScreenHeight+20))
+    surface.blit(versionText, (0, 0))
 
 
 def gameInitializing(gameType):
-    global clickState, board, gameNotFinished, displayGameMode, winner, surface, text1, text2, player2Name, player1Name, text7, playerXScore, playerXScore
+    global clickState, board, gameNotFinished, displayGameMode, winner, surface, text1, text2, player2Name, player1Name, currentPlayerText, playerXScore, playerXScore
     displayGameMode = False
     Player2.update(1000, 1000, 1, 1)
     bot.update(1000, 1000, 1, 1)
@@ -312,22 +315,27 @@ def displayWinner(winner):
         playerXScore += 1
 
         gameNotFinished = False
-        surface.blit(imgWinRect, (gameScreenWidth / 2 - imgWinRect.get_width()/2, gameScreenHeight / 2 - imgWinRect.get_height()/2))
-        surface.blit(text3, (gameScreenWidth / 2-text3.get_width()/2, gameScreenHeight / 2 -40))
-        surface.blit(text1, (gameScreenWidth / 2 -text1.get_width()/2, gameScreenHeight / 2 + text3.get_height()/2))
+        surface.blit(imgWinRect, (
+        gameScreenWidth / 2 - imgWinRect.get_width() / 2, gameScreenHeight / 2 - imgWinRect.get_height() / 2))
+        surface.blit(announceWinnerText,
+                     (gameScreenWidth / 2 - announceWinnerText.get_width() / 2, gameScreenHeight / 2 - 40))
+        surface.blit(text1, (
+        gameScreenWidth / 2 - text1.get_width() / 2, gameScreenHeight / 2 + announceWinnerText.get_height() / 2))
 
     elif winner == "O":
         playerOScore += 1
         gameNotFinished = False
-        surface.blit(imgWinRect, (gameScreenWidth / 2 - imgWinRect.get_width()/2, gameScreenHeight / 2 - imgWinRect.get_height()/2))
-        surface.blit(text3, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 40))
-        surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 + text3.get_height()/2))
+        surface.blit(imgWinRect, (
+        gameScreenWidth / 2 - imgWinRect.get_width() / 2, gameScreenHeight / 2 - imgWinRect.get_height() / 2))
+        surface.blit(announceWinnerText, (gameScreenWidth / 2 - 100, gameScreenHeight / 2 - 40))
+        surface.blit(text2, (gameScreenWidth / 2 - 60, gameScreenHeight / 2 + announceWinnerText.get_height() / 2))
 
 
     elif checkBoardFull():
-        surface.blit(imgWinRect, (gameScreenWidth / 2 - imgWinRect.get_width()/2, gameScreenHeight / 2 - imgWinRect.get_height()/2))
-        surface.blit(text6, (gameScreenWidth / 2 - imgWinRect.get_width() / 2 + text6
-                             .get_width() / 2, gameScreenHeight / 2-text6.get_height()/2))
+        surface.blit(imgWinRect, (
+        gameScreenWidth / 2 - imgWinRect.get_width() / 2, gameScreenHeight / 2 - imgWinRect.get_height() / 2))
+        surface.blit(drawText, (gameScreenWidth / 2 - imgWinRect.get_width() / 2 + drawText
+                                .get_width() / 2, gameScreenHeight / 2 - drawText.get_height() / 2))
 
     pygame.display.update()
 
@@ -337,12 +345,13 @@ def checkWin(row, col, boxUsed, drawLine):
 
     if boxUsed[row][0] == boxUsed[row][1] == boxUsed[row][2]:
         if drawLine:
-            surface.blit(imgHorizentalLine, (20, row * cellHeight + cellHeight / 3-imgHorizentalLine.get_height()/3))
+            surface.blit(imgHorizentalLine,
+                         (20, row * cellHeight + cellHeight / 3 - imgHorizentalLine.get_height() / 3))
         winner = boxUsed[row][0]
 
     elif boxUsed[0][col] == boxUsed[1][col] == boxUsed[2][col]:
         if drawLine:
-            surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3-imgVerticalLine.get_width()/4, 10))
+            surface.blit(imgVerticalLine, (col * cellWidth + cellHeight / 3 - imgVerticalLine.get_width() / 4, 10))
         winner = boxUsed[1][col]
 
     elif boxUsed[0][0] == boxUsed[1][1] == boxUsed[2][2] == "X":
@@ -443,7 +452,7 @@ while running:
                 gameInitializing(gameType)
                 gameNotFinished = True
             elif textStartDisplay.collidepoint(pos):
-                text7 = font1.render("Player 1's name:", True, (255, 255, 255))
+                currentPlayerText = font1.render("Player 1's name:", True, (255, 255, 255))
                 chooseName = False
                 gameMode()
 
