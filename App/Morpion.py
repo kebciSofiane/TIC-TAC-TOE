@@ -3,8 +3,6 @@ import time, random, copy
 
 # todo
 # Parfois y'a un beug ou quand x gagne en mode bot le o jour directement et gagne aussi
-# le prbleme du scroll
-
 
 pygame.init()
 
@@ -403,7 +401,8 @@ def findColAndRow(x, y):
 
 def mouseClickDetection():
     global firstClick
-    if event.type == pygame.MOUSEBUTTONDOWN:
+    left, middle, right = pygame.mouse.get_pressed()
+    if left:
         (x, y) = pygame.mouse.get_pos()
         findColAndRow(x, y)
 
@@ -413,7 +412,8 @@ while running:
         input_name()
 
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        left, middle, right = pygame.mouse.get_pressed()
+        if left:
             if inputFrameName.collidepoint(pos):
                 nameButtonClicked = True
 
@@ -423,8 +423,7 @@ while running:
 
         if not (chooseName) and nameButtonClicked:
             input_box()
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if left:
             if textQuitDisplay.collidepoint(pos):
                 textQuitDisplay = surface.blit(imgQuitClicked, (625, 100))
                 pygame.display.flip()
