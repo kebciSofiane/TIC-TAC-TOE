@@ -1,3 +1,6 @@
+import os
+from fileinput import filename
+
 import pygame
 import time, random, copy
 
@@ -23,33 +26,34 @@ pygame.display.set_caption("Tic-Tac-Toe")
 
 running = True
 color = "red"
+print(__file__)
+imgX=pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/x-png-22.png')))
+imgO=pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/R.png')))
 
-imgX = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\x-png-22.png")
-imgO = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\R.png")
-imgTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\Title.png")
-imgSubTitle = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\SubTitle.png")
+imgTitle = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/Title.png')))
+imgSubTitle = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/SubTitle.png')))
 
-imgStartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startClicked.png")
-imgStartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\start_Unclicked.png")
-imgStartOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\startOverview.png")
+imgStartClicked =pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/startClicked.png')))
+imgStartUnclicked = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/start_Unclicked.png')))
+imgStartOverview = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/startOverview.png')))
 
-imgRestartClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartClicked.png")
-imgRestartUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartUnclicked.png")
-imgRestartOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\restartOverview.png")
+imgRestartClicked = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/restartClicked.png')))
+imgRestartUnclicked = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/restartUnclicked.png')))
+imgRestartOverview =  pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/restartOverview.png')))
 
-imgQuitClicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitClicked.png")
-imgQuitOverview = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitOverview.png")
-imgQuitUnclicked = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\quitUnclicked.png")
+imgQuitClicked = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/quitClicked.png')))
+imgQuitOverview = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/quitOverview.png')))
+imgQuitUnclicked = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/quitUnclicked.png')))
 
-imgPlayerFrame = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\PlayerFrame.png")
+imgPlayerFrame = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/PlayerFrame.png')))
 
-imgHorizentalLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\horizentalLine.png")
-imgVerticalLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\verticalLine.png")
-imgdiagonalLeftLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineLeft.png")
-imgdiagonalRightLine = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\diagonalLineRight.png")
+imgHorizentalLine = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/horizentalLine.png')))
+imgVerticalLine = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/verticalLine.png')))
+imgdiagonalLeftLine = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/diagonalLineLeft.png')))
+imgdiagonalRightLine =pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/diagonalLineRight.png')))
 
-imgWinRect = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\rect.png")
-imgInputFrame = pygame.image.load("D:\\France\\Programmation\\pyhton\\Images\\inputBox.png")
+imgWinRect = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/rect.png')))
+imgInputFrame = pygame.image.load(os.path.realpath(os.path.join(os.path.dirname(__file__), 'Images/inputBox.png')))
 
 imgX = pygame.transform.scale(imgX, (150, 150))
 imgO = pygame.transform.scale(imgO, (150, 150))
