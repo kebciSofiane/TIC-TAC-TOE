@@ -1,5 +1,6 @@
 <h1 align="center" > TIC-TAC-TOE </h1>
 <h3 align = "center" >Personal Projet 1 </h3> 
+<p align = "center"> If you'd like to try my game, you can do so by following these steps: first, navigate to the App/ directory and download the Setup folder. Once it's downloaded, install the game by clicking on Morpion.exe then follow the on-screen instructions, From there, you should be good to go!</p>
 <div align = "center">
   <img align = "center" src="App/TicTacToeMainMenu.png" width = "50%"  height ="auto"></img>
 
